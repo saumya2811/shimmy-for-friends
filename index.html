@@ -1,0 +1,1146 @@
+<title>Shimmy Shimmy Shimmy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;600;700&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Layout: one phone-width column; pink tab card holding the week grid, cream shimmy-meter card below. Single light pastel look by choice. */
+:root{
+  --page:#FFF7F5; --pink:#FDECEA; --pink-line:#F6BDBB; --pink-mid:#EE9A9B; --pink-deep:#E8898C;
+  --rose:#C9717A; --wine:#8E3F46; --cream:#FBF0E2; --cream-line:#EED8BC; --milk:#FFFAF3; --bark:#9A7552;
+  --f1-1:#EAF3FC; --f1-2:#B9D8F2; --f1-3:#2C5D8A;
+  --f2-1:#FBF3E8; --f2-2:#F1DEC3; --f2-3:#7A5A3A;
+  --f3-1:#F4EDFA; --f3-2:#E1D2F1; --f3-3:#6B4C8A;
+  --f4-1:#FFF4F2; --f4-2:#F6BDBB; --f4-3:#8E3F46;
+  --display:"Pacifico","Brush Script MT",cursive;
+  --body:"Quicksand",ui-rounded,"Segoe UI",system-ui,sans-serif;
+  --mono:"Courier Prime","Courier New",ui-monospace,monospace;
+  color-scheme:light;
+}
+html,body{background:var(--page)}
+body{color:var(--wine);font-family:var(--body);padding-inline:16px;padding-block:20px 32px}
+.wrap{max-width:440px;margin:0 auto}
+.tab{background:var(--pink);border:0.5px solid var(--pink-line);border-radius:18px;padding:16px 12px}
+.title{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:22px;color:var(--wine);margin:0 0 6px;font-weight:400}
+.sub{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:20px}
+.jig{position:relative}
+.sub .tag{display:inline-flex;align-items:center;gap:5px;background:none;border:0;padding:4px 0;font:600 13px var(--body);color:var(--rose);cursor:pointer}
+.tag u{text-decoration:none}
+.tag .q{width:13px;height:13px;flex:none;display:block}
+.tag .q .ring{fill:none;stroke:var(--pink-deep);stroke-width:1.2;transition:fill .15s}
+.tag .q .mark{fill:var(--pink-deep);stroke:var(--pink-deep);transition:fill .15s,stroke .15s}
+.sub .tag:hover .q .ring,.sub .tag[aria-expanded="true"] .q .ring{fill:var(--pink-deep)}
+.sub .tag:hover .q .mark,.sub .tag[aria-expanded="true"] .q .mark{fill:var(--milk);stroke:var(--milk)}
+.jigpop{position:absolute;top:calc(100% + 8px);left:0;z-index:20;width:230px;background:var(--milk);border:0.5px solid var(--pink-line);border-radius:14px;padding:12px 14px;box-shadow:0 8px 24px rgba(142,63,70,.14);font-size:13px;line-height:1.45;color:var(--wine);animation:fade .18s ease}
+.jigpop b{display:block;font-family:var(--display);font-weight:400;font-size:16px;margin-bottom:6px}
+.jigpop p{margin:0 0 6px}
+.jigpop .jigend{margin:0;font-weight:700;color:var(--rose)}
+.picker{position:relative}
+.wkbtn{display:inline-flex;align-items:center;gap:5px;background:var(--milk);border:0.5px solid var(--pink-line);border-radius:12px;padding:4px 9px;font:600 12px var(--body);color:var(--wine);cursor:pointer}
+.wkbtn svg{width:13px;height:13px}
+.cal{position:absolute;top:calc(100% + 6px);right:0;z-index:20;width:240px;background:var(--milk);border:0.5px solid var(--pink-line);border-radius:14px;padding:10px;box-shadow:0 8px 24px rgba(142,63,70,.14)}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-weight:700;font-size:13px}
+.cal-row{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dn{font-size:11px;color:var(--rose);text-align:center;padding:2px 0}
+.dd{font:600 12px var(--body);color:var(--wine);background:none;border:0;height:28px;border-radius:8px;cursor:pointer;font-variant-numeric:tabular-nums}
+.dd.out{color:#E3AFAD}
+.dd.wk{background:var(--pink-line)}
+.dd.today{box-shadow:inset 0 0 0 1.5px var(--pink-deep)}
+.navb{background:none;border:0;color:var(--rose);width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.navb svg{width:16px;height:16px}
+.banner{background:var(--milk);border:0.5px solid var(--pink-line);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:var(--wine)}
+.banner b{font-weight:700}
+.pick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px}
+.pick button{border:0;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font:700 11px var(--body);color:var(--wine)}
+.pick button img{width:100%;max-width:56px;aspect-ratio:1;object-fit:cover;border-radius:6px}
+.pick button[disabled]{opacity:.35;cursor:default}
+.welcome{text-align:center;padding:28px 16px 24px}
+.wtitle{font-family:var(--display);font-weight:400;font-size:28px;margin:0 0 20px;color:var(--wine)}
+.wpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:300px;margin:0 auto}
+.wpick button{position:relative;border:0;background:var(--milk);border-radius:14px;padding:10px 10px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;font:700 15px var(--body);color:var(--wine);opacity:0;
+  animation:wpop .5s cubic-bezier(.3,1.5,.6,1) var(--d1) forwards,wfloat var(--fd) ease-in-out var(--d2) infinite}
+.wpick button:nth-child(1){--d1:.1s;--d2:.9s;--fd:4.2s}
+.wpick button:nth-child(2){--d1:.22s;--d2:1.7s;--fd:4.8s}
+.wpick button:nth-child(3){--d1:.34s;--d2:1.3s;--fd:4.5s}
+.wpick button:nth-child(4){--d1:.46s;--d2:2.1s;--fd:5s}
+@keyframes wpop{from{opacity:0;transform:translateY(10px) scale(.92)}to{opacity:1;transform:none}}
+@keyframes wfloat{0%,100%{transform:none}50%{transform:translateY(-4px)}}
+.wpick button[aria-disabled="true"]{cursor:default}
+.wpick button img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;transition:transform .25s}
+.wpick button:not([aria-disabled]):hover img{transform:scale(1.03)}
+.wpick button.taken img,.wpick button.taken .wname{opacity:.4}
+.wpick small{display:block;font:600 11px var(--body);color:var(--rose);margin-top:-6px}
+.wpick small[hidden]{display:none}
+.wnote{font-size:13px;color:var(--rose);margin:16px 0 0;min-height:18px}
+.linkish{background:none;border:0;padding:0;font:700 12px var(--body);color:var(--rose);text-decoration:underline;cursor:pointer}
+.grid{display:grid;grid-template-columns:22px repeat(4,minmax(0,1fr));gap:5px;align-items:center}
+.who{display:flex;flex-direction:column;align-items:center;gap:4px}
+.who img{width:100%;max-width:56px;aspect-ratio:1;object-fit:cover;border-radius:6px;display:block}
+.who i{display:block;width:60%;height:3px;border-radius:2px}
+.dy{font-size:12px;font-weight:700;color:var(--rose);text-align:center}
+.c{height:32px;border-radius:9px;border:0.5px solid var(--f2-2);padding:0 7px;font:600 11px/32px var(--body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;transition:background .3s,border-color .3s;min-width:0}
+button.c{cursor:pointer}
+.c.empty-mine{border:1px dashed var(--pink-deep);background:var(--milk);color:var(--pink-deep);text-align:center;display:flex;align-items:center;justify-content:center}
+.c.empty-mine svg{width:14px;height:14px}
+.c.sel{outline:1.5px solid var(--pink-deep);outline-offset:1px}
+.c.pop{animation:pop .45s ease}
+@keyframes pop{0%{transform:scale(.85) rotate(-2deg)}60%{transform:scale(1.07) rotate(1deg)}100%{transform:none}}
+.note{margin-top:10px;border-radius:12px;padding:10px 12px;font-size:14px;animation:fade .2s ease}
+.note b{font-weight:700}
+.note .txt{margin-top:4px;outline:none;min-height:20px}
+.note .txt[contenteditable]:empty::before{content:"what did you do?";opacity:.6}
+.note-foot{display:flex;justify-content:flex-end;margin-top:8px}
+.clear{display:inline-flex;align-items:center;gap:5px;background:var(--milk);border:0.5px solid currentColor;color:inherit;border-radius:12px;padding:4px 10px;font:700 12px var(--body);cursor:pointer}
+.clear svg{width:12px;height:12px}
+.meter{margin-top:14px;background:var(--cream);border:0.5px solid var(--cream-line);border-radius:14px;padding:12px}
+.meter-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meter-head h2{font-family:var(--display);font-weight:400;font-size:18px;margin:0;color:var(--wine)}
+.cnt{font-weight:700;font-size:13px;color:var(--rose);font-variant-numeric:tabular-nums}
+.quip{font-size:12px;color:var(--bark);margin:2px 0 6px}
+.scale{position:relative;height:156px;margin:0 26px 0 20px}
+.track{position:absolute;left:0;right:0;top:68px;height:10px;background:var(--milk);border:0.5px solid var(--cream-line);border-radius:5px}
+.bar{height:10px;background:var(--pink-mid);border-radius:5px;width:0;transition:width .8s ease}
+.pin{position:absolute;top:62px;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--pink-mid);background:var(--milk);color:var(--pink-deep);display:flex;align-items:center;justify-content:center;z-index:2;transition:background .4s,color .4s}
+.pin svg{width:12px;height:12px}
+.pin.on{background:var(--pink-mid);color:var(--milk)}
+.lb{position:absolute;width:86px;text-align:center;font-size:11px}
+.lb .num{color:var(--bark);font-weight:700;margin:2px 0}
+.rw{background:var(--milk);border:0.5px solid var(--f2-2);border-radius:10px;padding:4px 6px;color:var(--f2-3);min-height:16px;outline:none;line-height:1.3}
+.rw:empty::before{content:"we get to...";color:var(--rose);opacity:.75}
+.dash{position:absolute;width:0;border-left:1px dashed var(--pink-deep)}
+#cat{position:absolute;top:52px;width:42px;height:42px;border-radius:4px;object-fit:cover;z-index:4;transition:left .8s ease;animation:hop 1s ease-in-out infinite}
+@keyframes hop{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-3px) rotate(4deg)}}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.hips{transform-origin:20px 26px;animation:sway .5s ease-in-out infinite alternate}
+.arms{transform-origin:20px 17px;animation:wave .5s ease-in-out infinite alternate}
+.head{transform-origin:20px 17px;animation:bob .5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-14deg) translateX(-2px)}to{transform:rotate(14deg) translateX(2px)}}
+@keyframes wave{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+@keyframes bob{from{transform:translateY(0) rotate(4deg)}to{transform:translateY(-1px) rotate(-4deg)}}
+.flag{transform-origin:0 50%;animation:flap .6s ease-in-out infinite alternate}
+@keyframes flap{from{transform:skewY(-6deg)}to{transform:skewY(6deg)}}
+.tabs{display:flex;gap:4px;background:var(--milk);border:0.5px solid var(--pink-line);border-radius:14px;padding:3px;margin-bottom:20px}
+.tabs button{flex:1;min-width:0;border:0;background:none;border-radius:11px;padding:7px 4px;font:700 12px var(--body);color:var(--rose);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs button[aria-selected="true"]{background:var(--pink-line);color:var(--wine)}
+.ftitle span{text-wrap:balance;line-height:1.25}
+.drum{flex:none;transform-origin:50% 60%;animation:nib 1.4s ease-in-out infinite}
+@keyframes nib{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.daynav{position:relative;display:flex;align-items:center;justify-content:center;gap:4px;margin:6px 0 16px}
+.daynav .navb[aria-disabled="true"]{opacity:.3;cursor:default}
+.dcal{right:auto;left:50%;transform:translateX(-50%)}
+.dd[aria-disabled="true"]{cursor:default}
+.ftools{display:flex;flex-wrap:wrap;align-items:center;gap:12px 8px;margin:4px 0 24px}
+.ftitle{margin-top:6px}
+.ftools .postpill{margin-left:auto}
+.flab{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.flab svg{width:13px;height:13px}
+.flab .lav{width:16px;height:16px;border-radius:4px;object-fit:cover;display:block}
+.menu{position:absolute;top:calc(100% + 6px);left:0;z-index:20;min-width:160px;background:var(--milk);border:0.5px solid var(--pink-line);border-radius:14px;padding:6px;box-shadow:0 8px 24px rgba(142,63,70,.14);display:flex;flex-direction:column;gap:2px;animation:fade .15s ease}
+.menu button{display:flex;align-items:center;gap:8px;border:0;background:none;border-radius:10px;padding:7px 10px;font:600 13px var(--body);color:var(--wine);cursor:pointer;text-align:left;white-space:nowrap}
+.menu button:hover{background:var(--pink)}
+.menu button[aria-checked="true"]{background:var(--pink-line);font-weight:700}
+.menu img{width:22px;height:22px;border-radius:6px;object-fit:cover;display:block}
+.menu svg{width:16px;height:16px}
+.menu .me{width:22px;text-align:center}
+.fpick{position:relative;display:flex;align-items:center;gap:4px}
+.clr{border:0;background:none;color:var(--rose);font:700 15px var(--body);cursor:pointer;padding:0 4px;line-height:1}
+.postpill{display:inline-flex;align-items:center;gap:4px;border:0.5px solid var(--pink-deep);background:var(--milk);color:var(--pink-deep);border-radius:12px;padding:4px 10px;font:700 12px var(--body);cursor:pointer}
+.postpill svg{width:12px;height:12px}
+.dcal{left:0;right:auto;transform:none}
+.cal-foot{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:8px}
+.cal-hint{font-size:11px;color:var(--bark)}
+.dd.rng{background:var(--pink)}
+.dd.has{position:relative}
+.dd.has::after{content:"";position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--pink-deep)}
+.feed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;border-radius:12px;overflow:hidden}
+.tile{position:relative;aspect-ratio:1;max-width:100%;overflow:hidden}
+.t-open{display:block;width:100%;height:100%;border:0;padding:0;background:none;cursor:pointer}
+.t-open img{display:block;width:100%;height:100%;object-fit:cover}
+.t-open img:not([src]){visibility:hidden}
+.t-who{position:absolute;top:5px;left:5px;display:flex;align-items:center;gap:4px;max-width:calc(100% - 10px);border-radius:8px;padding:2px 6px 2px 2px;font:700 10px var(--body);pointer-events:none;box-shadow:0 1px 2px rgba(142,63,70,.15)}
+.t-who img{width:16px;height:16px;border-radius:5px;object-fit:cover;flex:none}
+.t-who span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-date{position:absolute;left:5px;bottom:5px;background:rgba(255,250,243,.92);border-radius:8px;padding:1px 6px;font:700 10px var(--body);color:var(--wine);pointer-events:none}
+.t-like{position:absolute;right:5px;bottom:5px;display:inline-flex;align-items:center;gap:3px;border:0;background:rgba(255,250,243,.95);border-radius:9px;padding:3px 6px;font:700 10px var(--body);color:var(--wine);cursor:pointer;box-shadow:0 1px 2px rgba(142,63,70,.18)}
+.t-like .hrt{width:14px;height:14px;display:block}
+.t-like[disabled]{cursor:default}
+.food-err{margin:0 0 10px}
+.ctools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 8px;margin:4px 0 20px}
+.cwk{display:inline-flex;align-items:center;gap:2px;background:var(--milk);border:0.5px solid var(--pink-line);border-radius:12px;padding:1px 2px;font:600 12px var(--body);color:var(--wine)}
+.cwk span{min-width:88px;text-align:center}
+.cwk .navb{width:26px;height:26px}
+.cwk .navb[aria-disabled="true"]{opacity:.3;cursor:default}
+.cc{height:34px;border-radius:9px;border:0.5px solid var(--pink-line);background:var(--milk);display:flex;align-items:center;justify-content:center;padding:0;min-width:0}
+.cc .cupsvg{width:19px;height:17px;display:block}
+.cc:not(.full):not(.mine){border-color:transparent;background:rgba(255,250,243,.5)}
+.cc:not(.full):not(.mine) .cupsvg{opacity:.18}
+.cc.mine:not(.full) .cupsvg{opacity:.5}
+button.cc{cursor:pointer}
+.cc.mine{border:1px dashed var(--pink-deep)}
+.cc.mine.full{border:0.5px solid var(--pink-line)}
+.cc.fut{opacity:.45}
+.cc.pop .cupsvg{animation:pop .5s ease}
+.dy.tdy{color:var(--wine);text-decoration:underline;text-decoration-color:var(--pink-deep);text-decoration-thickness:2px;text-underline-offset:3px}
+.ideatoggle{display:block;margin:8px 2px 6px}
+.idl{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column}
+.idl li{display:flex;align-items:center;gap:8px;padding:9px 4px;border-bottom:0.5px dashed var(--pink-line);font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.idl li:last-child{border-bottom:0}
+.idl li span{flex:1;min-width:0}
+.idl li.empty{color:var(--rose);font-size:13px}
+.idl button{flex:none;border:0;background:none;color:var(--rose);font:700 15px var(--body);cursor:pointer;padding:0 4px;line-height:1}
+
+.cweek{display:flex;align-items:center;gap:2px;margin:2px 0 4px}
+.cweek .navb[aria-disabled="true"]{opacity:.3;cursor:default}
+.cdays{flex:1;min-width:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.cdbtn{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;border-radius:10px;padding:6px 0;cursor:pointer;font:700 11px var(--body);color:var(--rose)}
+.cdbtn b{font:700 13px var(--body);color:var(--wine);font-variant-numeric:tabular-nums}
+.cdbtn[aria-pressed="true"]{background:var(--milk);box-shadow:inset 0 0 0 1px var(--pink-mid)}
+.cdbtn.today b{text-decoration:underline;text-decoration-color:var(--pink-deep);text-decoration-thickness:2px;text-underline-offset:3px}
+.cdbtn[aria-disabled="true"]{opacity:.35;cursor:default}
+.cdots{display:flex;gap:2px}
+.cdots i{width:5px;height:5px;border-radius:50%;opacity:.25}
+.cdots i.on{opacity:1}
+.cday-label{text-align:center;font:700 12px var(--body);color:var(--rose);margin:10px 0 14px}
+.cups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.cupcard{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--milk);border:0.5px solid;border-radius:16px;padding:10px 10px 12px;font:inherit;color:var(--wine);text-align:center;min-width:0}
+button.cupcard{cursor:pointer}
+button.cupcard:hover{box-shadow:0 2px 8px rgba(142,63,70,.12)}
+.cuphead{display:flex;align-items:center;gap:6px;align-self:stretch}
+.cuphead img{width:22px;height:22px;border-radius:6px;object-fit:cover;display:block}
+.cuphead b{font-size:12px;font-weight:700}
+.cuphead .you{margin-left:auto;font-size:10px;font-weight:700;opacity:.7}
+.cupsvg{width:72px;height:63px;display:block;overflow:visible}
+.cupsvg .steam path{fill:none;stroke:#E8898C;stroke-width:2;stroke-linecap:round;animation:steam 2.4s ease-in-out infinite}
+.cupsvg .steam path:nth-child(2){animation-delay:.8s}
+@keyframes steam{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
+.cuptxt{margin:0;font-size:12px;line-height:1.35;overflow-wrap:anywhere;min-height:16px}
+.cuptxt.hint{color:var(--pink-deep);font-weight:700}
+.cupcard.pop .cupsvg{animation:pop .5s ease}
+.jar{margin-top:22px;background:var(--milk);border:0.5px solid var(--pink-line);border-radius:16px;padding:12px}
+.jar-h{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;margin-bottom:10px}
+.jar-h span{font-family:var(--display);font-size:17px;color:var(--wine)}
+.jar-h small{font-size:11px;color:var(--rose)}
+.ideas{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.idea{display:inline-flex;align-items:center;gap:5px;background:var(--pink);border:0.5px solid var(--pink-line);border-radius:14px;padding:4px 8px 4px 10px;font:600 12px var(--body);color:var(--wine);max-width:100%}
+.idea span{overflow-wrap:anywhere}
+.idea small{font-size:10px;color:var(--rose);flex:none}
+.idea button{border:0;background:none;color:var(--rose);font:700 13px var(--body);cursor:pointer;padding:0 2px;line-height:1}
+.ideapick{cursor:pointer;font-family:var(--body)}
+.ideapick:hover{border-color:var(--pink-mid)}
+.cookpill{margin-left:auto;border-color:var(--pink-line);color:var(--wine)}
+.ftools .cookpill + .postpill{margin-left:0}
+.recbox{margin:10px 2px 0}
+.recbtn{display:inline-flex;align-items:center;gap:6px}
+.rthumb{flex:none;width:44px;height:44px;border-radius:8px;overflow:hidden;background:var(--pink)}
+.rthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.rthumb img:not([src]){visibility:hidden}
+.rec-h{margin:10px 0 6px;font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--rose)}
+.rec-h:first-child{margin-top:2px}
+.ingl{display:flex;flex-wrap:wrap;gap:5px}
+.ing{background:var(--pink);border:0.5px solid var(--pink-line);border-radius:12px;padding:3px 9px;font:600 12px var(--body);color:var(--wine)}
+.rec-p{margin:0;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.rec-actions{display:flex;gap:14px;margin-top:10px}
+.recbox .flabel:first-child{margin-top:2px}
+.backlink{display:block;margin:0 0 10px}
+.rtoggle{align-self:flex-start;font-size:11px}
+.fresults{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.fnote{margin:0 2px;font-size:11px;color:var(--bark)}
+.fres{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--page);border:0.5px solid var(--pink-line);border-radius:12px;padding:8px;cursor:pointer;color:var(--wine);font:inherit}
+.fres:hover{border-color:var(--pink-mid)}
+.fth{flex:none;width:60px;aspect-ratio:1;border-radius:9px;overflow:hidden}
+.fth img{width:100%;height:100%;object-fit:cover;display:block}
+.fth img:not([src]){visibility:hidden}
+.fmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.fmain b{font-size:13px;font-weight:700;overflow-wrap:anywhere}
+.fmain small{font-size:11px;color:var(--rose)}
+.fbar{display:block;height:5px;border-radius:3px;background:var(--pink);margin:2px 0}
+.fbar i{display:block;height:5px;border-radius:3px;background:var(--pink-mid)}
+.fline{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.fline em{font-style:normal;font-weight:700;color:var(--rose);margin-right:3px}
+.ftip{font-size:12px;font-style:italic;color:var(--bark)}
+.meals{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:-4px 0 14px;padding:1px}
+.meals::-webkit-scrollbar{display:none}
+.mchip{flex:none;display:inline-flex;align-items:center;gap:4px;border:0.5px solid var(--pink-line);background:var(--milk);color:var(--rose);border-radius:14px;padding:4px 10px;font:700 12px var(--body);cursor:pointer}
+.mchip[aria-pressed="true"]{background:var(--pink-line);color:var(--wine);border-color:var(--pink-mid)}
+.pchip{padding-left:3px}
+.pchip img{width:18px;height:18px;border-radius:5px;object-fit:cover;display:block}
+#people{margin-bottom:8px}
+.mpick{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.capbox{margin:10px 2px 2px}
+.capbox .sh-cap{margin:0 0 4px}
+.cap-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:6px}
+.capbox textarea.field{margin-top:0}
+.cmhead{margin:12px 2px 6px;padding-top:10px;border-top:0.5px dashed var(--pink-line);font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--rose)}
+.flabel{display:block;margin:12px 2px 0;font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--rose)}
+.flabel + textarea.field{margin-top:4px}
+.batch{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.bitem{display:flex;gap:10px;align-items:flex-start;padding-bottom:12px;border-bottom:0.5px dashed var(--pink-line)}
+.bitem:last-child{border-bottom:0;padding-bottom:0}
+.bthumb{position:relative;flex:none;width:84px;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--pink)}
+.bthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.bx{position:absolute;top:4px;right:4px;width:22px;height:22px;border:0;border-radius:50%;background:rgba(255,250,243,.95);color:var(--wine);font:700 14px var(--body);line-height:1;cursor:pointer}
+.bfields{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.bfields .mpick{margin-top:0;gap:4px}
+.bfields .mchip{padding:3px 8px;font-size:11px}
+.bfields textarea.field{margin-top:0}
+.feed-empty{padding:28px 12px;text-align:center;font-size:13px;color:var(--rose);background:var(--milk);border-radius:12px}
+.sheet-top{z-index:60!important;background:rgba(142,63,70,.16)!important}
+.sheet-wrap{position:fixed;inset:0;z-index:50;background:rgba(142,63,70,.32);display:flex;align-items:flex-end;justify-content:center;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px))}
+@media (min-width:560px){.sheet-wrap{align-items:center}}
+.sheet-wrap[hidden]{display:none}
+.sheet{width:100%;max-width:440px;max-height:88vh;overflow:auto;background:var(--milk);color:var(--wine);border-radius:18px;padding:14px;animation:rise .2s ease}
+@keyframes rise{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.sh-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sh-head .av{width:34px;height:34px;border-radius:8px;object-fit:cover}
+.sh-head b{display:block;font-weight:700;font-size:14px}
+.sh-head small{display:block;font-size:12px;color:var(--rose)}
+.sh-head .navb{margin-left:auto}
+.sh-photo{border-radius:12px;overflow:hidden;background:var(--pink)}
+.sh-photo img{width:100%;max-height:58vh;min-height:160px;object-fit:contain;display:block}
+.sh-cap b{font-weight:700}
+.sh-cap{margin:10px 2px 6px;font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.rxrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
+.rxb{display:inline-flex;align-items:center;gap:4px;border:0.5px solid var(--pink-line);background:var(--page);border-radius:14px;padding:4px 9px;font:700 12px var(--body);color:var(--wine);cursor:pointer}
+.rxb.on{background:var(--pink-line);border-color:var(--pink-mid)}
+.rxb[disabled]{cursor:default}
+.rxb .e{font-size:15px;line-height:1}
+.cms{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.cm{display:flex;gap:6px;align-items:flex-start;font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+.cm b{font-weight:700;flex:none}
+.cm span{min-width:0}
+.cm .del{margin-left:auto;flex:none;background:none;border:0;color:var(--rose);cursor:pointer;padding:0 4px;font:700 14px var(--body)}
+.cmform{display:flex;gap:6px}
+.field{flex:1;min-width:0;background:var(--page);border:0.5px solid var(--pink-line);border-radius:12px;padding:8px 10px;font:600 13px var(--body);color:var(--wine);outline:none}
+.field::placeholder{color:var(--rose);opacity:.75}
+.field:focus{border-color:var(--pink-deep)}
+textarea.field{display:block;width:100%;box-sizing:border-box;resize:none;margin-top:10px}
+.btn{border:0;background:var(--pink-line);color:var(--wine);border-radius:12px;padding:8px 16px;font:700 13px var(--body);cursor:pointer}
+.btn.ghost{background:none;color:var(--rose);border:0.5px solid var(--pink-line)}
+.btn[aria-busy="true"]{opacity:.7;cursor:progress}
+.sh-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:10px}
+.sh-err{font-size:12px;color:#B23A48;margin:6px 2px 0}
+.sh-wait{padding:30px 10px;text-align:center;color:var(--rose);font-size:14px}
+button:focus-visible,[contenteditable]:focus-visible{outline:2px solid var(--pink-deep);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.wpick button{opacity:1}}
+</style>
+
+<div class="wrap">
+  <section class="tab welcome" id="welcome">
+    <h1 class="wtitle">Who are you?</h1>
+    <div class="wpick" id="wpick"></div>
+    <p class="wnote" id="wnote">Getting things ready…</p>
+  </section>
+  <section class="tab" id="main" hidden>
+    <nav class="tabs" role="tablist" aria-label="Tabs">
+      <button role="tab" id="t-move" aria-selected="true">Shimmy</button>
+      <button role="tab" id="t-food" aria-selected="false">Did you eat?</button>
+      <button role="tab" id="t-cup" aria-selected="false">Fill your cup</button>
+    </nav>
+    <div id="banner"></div>
+    <div id="pane-move">
+    <h1 class="title">
+      <svg width="34" height="40" viewBox="0 0 40 46" aria-hidden="true">
+        <g class="hips"><path d="M14 26 L26 26 L31 38 Q20 41 9 38 Z" fill="#EE9A9B"/><line x1="16" y1="39" x2="14" y2="45" stroke="#E8CFAE" stroke-width="2.4" stroke-linecap="round"/><line x1="24" y1="39" x2="26" y2="45" stroke="#E8CFAE" stroke-width="2.4" stroke-linecap="round"/></g>
+        <rect x="15" y="17" width="10" height="10" rx="4" fill="#E8898C"/>
+        <g class="arms"><path d="M16 19 Q9 15 7 7" stroke="#E8CFAE" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M24 19 Q31 15 33 7" stroke="#E8CFAE" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+        <g class="head"><circle cx="20" cy="11" r="6" fill="#F1DEC3"/><circle cx="20" cy="3.5" r="3" fill="#7A5A3A"/><path d="M14 10 Q20 4 26 10" fill="#7A5A3A"/><circle cx="18" cy="11.5" r="0.9" fill="#8E3F46"/><circle cx="22" cy="11.5" r="0.9" fill="#8E3F46"/><circle cx="16.5" cy="13.5" r="1.2" fill="#F6BDBB"/><circle cx="23.5" cy="13.5" r="1.2" fill="#F6BDBB"/></g>
+      </svg>
+      Shimmy shimmy shimmy
+    </h1>
+    <div class="sub">
+      <div class="jig">
+        <button class="tag" id="jigbtn" aria-haspopup="dialog" aria-expanded="false">all <u>jiggles</u> count <svg class="q" viewBox="0 0 16 16" aria-hidden="true"><circle class="ring" cx="8" cy="8" r="7"/><circle class="mark" cx="8" cy="4.9" r="0.9" stroke-width="0"/><path class="mark" d="M8 7.3v4.3" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <div class="jigpop" id="jigpop" role="dialog" aria-label="What counts as a jiggle" hidden>
+          <b>What counts as a jiggle?</b>
+          <p>10 minutes of any activity. It could be walking, dancing, or doing cartwheels across your room.</p>
+          <p class="jigend">You just have to show up.</p>
+        </div>
+      </div>
+      <div class="picker">
+        <button class="wkbtn" id="wkbtn" aria-haspopup="dialog" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/></svg>
+          <span id="wk"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div id="calwrap"></div>
+      </div>
+    </div>
+    <div class="grid" id="g"></div>
+    <div id="note"></div>
+
+    <div class="meter">
+      <div class="meter-head"><h2>The shimmy meter</h2><span class="cnt" id="cnt"></span></div>
+      <div class="quip" id="quip"></div>
+      <div class="scale" id="scale">
+        <div class="track"><div class="bar" id="bar"></div></div>
+        <img id="cat" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20rx%3D%2710%27%20fill%3D%27%23F6BDBB%27/%3E%3Cpath%20d%3D%27M14%2026%20L17%208%20L28%2019%20Z%20M50%2026%20L47%208%20L36%2019%20Z%27%20fill%3D%27%23FBF0E2%27%20stroke%3D%27%238E3F46%27%20stroke-width%3D%272%27%20stroke-linejoin%3D%27round%27/%3E%3Ccircle%20cx%3D%2732%27%20cy%3D%2736%27%20r%3D%2720%27%20fill%3D%27%23FBF0E2%27%20stroke%3D%27%238E3F46%27%20stroke-width%3D%272%27/%3E%3Crect%20x%3D%2715%27%20y%3D%2728%27%20width%3D%2714%27%20height%3D%279%27%20rx%3D%274%27%20fill%3D%27%238E3F46%27/%3E%3Crect%20x%3D%2735%27%20y%3D%2728%27%20width%3D%2714%27%20height%3D%279%27%20rx%3D%274%27%20fill%3D%27%238E3F46%27/%3E%3Cpath%20d%3D%27M29%2031%20h6%27%20stroke%3D%27%238E3F46%27%20stroke-width%3D%272%27/%3E%3Cpath%20d%3D%27M30%2042%20l2%202%20l2%20-2%20z%27%20fill%3D%27%23E8898C%27/%3E%3Cpath%20d%3D%27M32%2044%20q-3%204%20-6%202%20M32%2044%20q3%204%206%202%27%20fill%3D%27none%27%20stroke%3D%27%238E3F46%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27/%3E%3Cpath%20d%3D%27M8%2040%20h9%20M8%2045%20l9%20-2%20M56%2040%20h-9%20M56%2045%20l-9%20-2%27%20stroke%3D%27%23C9717A%27%20stroke-width%3D%271.4%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E" alt="Kitten in sunglasses marking the group's jiggle points">
+      </div>
+    </div>
+    </div>
+
+    <div id="pane-food" hidden>
+      <div class="ftools">
+        <div class="fpick">
+          <button class="wkbtn" id="dbtn" aria-haspopup="dialog" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/></svg>
+            <span id="dlabel">All days</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <button class="clr" id="dclear" aria-label="Show all days" hidden>×</button>
+          <div id="dcalwrap"></div>
+        </div>
+        <div class="fpick">
+          <button class="wkbtn" id="pbtn" aria-haspopup="menu" aria-expanded="false"><span class="flab" id="plabel">Everyone</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div id="pmenu"></div>
+        </div>
+        <div class="fpick">
+          <button class="wkbtn" id="mbtn" aria-haspopup="menu" aria-expanded="false"><span class="flab" id="mlabel">All meals</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div id="mmenu"></div>
+        </div>
+        <button class="postpill" id="addbite" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Post</button>
+      </div>
+      <div class="bentos" id="bentos"></div>
+    </div>
+
+    <div id="pane-cup" hidden>
+      <div class="ctools">
+        <div class="cwk"><button class="navb" id="cwprev" aria-label="Previous week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><span id="cwlabel"></span><button class="navb" id="cwnext" aria-label="Next week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div>
+        <button class="postpill" id="ideabtn">💡 Need an idea?</button>
+      </div>
+      <div class="grid cgrid" id="cgrid"></div>
+      <div id="cnote"></div>
+    </div>
+  </section>
+    </div>
+  </section>
+</div>
+<input type="file" id="fpick" accept="image/*" multiple hidden>
+<div class="sheet-wrap" id="sheet" hidden></div>
+<div class="sheet-wrap sheet-top" id="sheet2" hidden></div>
+
+<script>
+/* ---------- your friends ----------
+   Put your group's names here (up to four). Each friend gets one of the four pastel color sets above (--f1 to --f4).
+   For photos, add square images next to this file (for example img/ana.jpg) and set img:'img/ana.jpg'.
+   Leave img empty and she gets a pastel square with her initial instead. */
+const FRIENDS=[
+  {name:'Ana', img:''},
+  {name:'Bea', img:''},
+  {name:'Cleo',img:''},
+  {name:'Dani',img:''}
+];
+const PEOPLE=FRIENDS.slice(0,4).map((f,i)=>({id:f.name,img:f.img,c:['--f'+(i+1)+'-1','--f'+(i+1)+'-2','--f'+(i+1)+'-3']}));
+(function(){const cs=getComputedStyle(document.documentElement);
+  PEOPLE.forEach(p=>{if(p.img)return;const bg=cs.getPropertyValue(p.c[1]).trim()||'#F6BDBB',fg=cs.getPropertyValue(p.c[2]).trim()||'#8E3F46';
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="${bg}"/><text x="50" y="50" dy=".35em" text-anchor="middle" font-family="Quicksand,Arial,sans-serif" font-weight="700" font-size="48" fill="${fg}">${(p.id[0]||'?').toUpperCase()}</text></svg>`;
+    p.img='data:image/svg+xml,'+encodeURIComponent(svg)})})();
+const DAYS=['M','T','W','T','F','S','S'],FULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],MONF=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const ICON={
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l4 4 4-7 4 7 4-4-2 11H6z"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>',
+  right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
+};
+const M=[{at:10,ic:'heart',pos:'below'},{at:18,ic:'star',pos:'above'},{at:28,fin:true,pos:'below'}];
+const QUIPS=[[0,'teamwork, dream work'],[10,'look at us, practically athletes'],[18,'legs are legging. the group chat is proud'],[28,'too glam to skip a walk']];
+const v=(n)=>`var(${n})`;
+const $=(id)=>document.getElementById(id);
+const today=new Date();today.setHours(0,0,0,0);
+const monday=(d)=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
+const pad=(n)=>String(n).padStart(2,'0');
+const dkey=(d)=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const dayKey=(i)=>{const d=new Date(ws);d.setDate(ws.getDate()+i);return dkey(d)};
+let ws=monday(today),calM=new Date(ws.getFullYear(),ws.getMonth(),1),calOpen=false,sel=null;
+
+/* ---------- shared state ---------- */
+let db=null,me=null,canWrite=true,status='loading';
+let claims={};            // uid -> {name, at}
+let logs={};              // uid -> {days:{'YYYY-MM-DD': text}}
+let rewards={};           // weekKey -> ['', '', '']
+let myDays={},dirty=false,saveTimer=null,saving=Promise.resolve();
+const rwTimers={};
+
+function uidFor(name){let best=null;for(const [uid,c] of Object.entries(claims)){if(c&&c.name===name&&(!best||c.at<claims[best].at))best=uid}return best}
+function myName(){if(!me||!claims[me])return null;const n=claims[me].name;return uidFor(n)===me?n:null}
+function daysOf(name){const uid=uidFor(name);if(!uid)return {};if(uid===me)return myDays;return (logs[uid]&&logs[uid].days)||{}}
+function entry(name,i){const d=daysOf(name);const k=dayKey(i);return Object.prototype.hasOwnProperty.call(d,k)?d[k]:null}
+
+function blocked(){canWrite=false;closeNote();render(false);renderBanner();if(typeof renderFood==='function')renderFood();if(typeof renderCup==='function')renderCup()}
+function saveMine(){
+  if(!db||!me)return;clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    const body={days:JSON.parse(JSON.stringify(myDays))};
+    saving=saving.then(()=>db.doc('logs/'+me).set(body)).then(()=>{dirty=false}).catch(e=>{if(e&&e.code==='invalid_argument')blocked()});
+  },450);
+}
+function saveReward(wk){
+  if(!db)return;clearTimeout(rwTimers[wk]);
+  rwTimers[wk]=setTimeout(()=>{db.doc('rewards/'+wk).set({r:rewards[wk].slice()}).catch(e=>{if(e&&e.code==='invalid_argument')blocked()})},600);
+}
+
+/* ---------- meter scaffolding ---------- */
+const g=$('g'),note=$('note'),scale=$('scale'),cw=$('calwrap'),banner=$('banner');
+let checks='';for(let y=0;y<10;y++)for(let x=0;x<2;x++)checks+=`<rect x="${x*5}" y="${y*5}" width="5" height="5" fill="${(x+y)%2?'#FFFAF3':'#8E3F46'}"/>`;
+scale.insertAdjacentHTML('beforeend',`<svg style="position:absolute;left:calc(100% - 5px);top:36px;z-index:3" width="30" height="62" viewBox="0 0 30 62" aria-hidden="true"><line x1="5" y1="0" x2="5" y2="12" stroke="#8E3F46" stroke-width="1.5"/><g class="flag"><path d="M5.5 1 L24 5 L5.5 10 Z" fill="#EE9A9B"/></g><g transform="translate(0,12)">${checks}</g></svg>`);
+M.forEach((m,k)=>{const pct=Math.round(m.at/28*100);
+  const box=`<div class="rw" id="rw${k}" contenteditable="true" role="textbox" aria-label="Reward at ${m.at} jiggles"></div>`,num=`<div class="num">${m.at} jiggles${m.fin?' · finish':''}</div>`;
+  const where=m.fin?'right:-24px;text-align:right':`left:calc(${pct}% - 43px)`;
+  scale.insertAdjacentHTML('beforeend',`<div class="lb" style="${where};${m.pos==='above'?'top:0':'top:102px'}">${m.pos==='above'?box+num:num+box}</div>`);
+  if(!m.fin){
+    scale.insertAdjacentHTML('beforeend',`<div class="dash" style="left:${pct}%;${m.pos==='above'?'top:48px;height:14px':'top:84px;height:18px'}"></div>`);
+    scale.insertAdjacentHTML('beforeend',`<div class="pin" id="p${k}" style="left:calc(${pct}% - 11px)">${ICON[m.ic]}</div>`);
+  }
+  $('rw'+k).addEventListener('input',e=>{const wk=dkey(ws);if(!rewards[wk])rewards[wk]=['','',''];rewards[wk][k]=e.target.textContent;saveReward(wk)});
+});
+
+function count(){let n=0;PEOPLE.forEach(p=>{for(let i=0;i<7;i++)if(entry(p.id,i)!==null)n++});return n}
+function updMeter(){const n=count(),pct=Math.min(n/28*100,100);
+  $('cnt').textContent=`${n}/28 jiggle points`;$('bar').style.width=pct+'%';
+  $('cat').style.left=`max(-16px, calc(${pct}% - 21px))`;
+  $('quip').textContent=QUIPS.filter(q=>n>=q[0]).pop()[1];
+  M.forEach((m,k)=>{const p=$('p'+k);if(p)p.classList.toggle('on',n>=m.at)});
+}
+function updRewards(){const r=rewards[dkey(ws)]||['','',''];M.forEach((m,k)=>{const el=$('rw'+k);if(document.activeElement!==el)el.textContent=r[k]||'';el.contentEditable=String(canWrite&&!!me&&!!db)})}
+
+/* ---------- banner: who are you ---------- */
+function showMain(on){$('main').hidden=!on;$('welcome').hidden=on}
+/* Set ALWAYS_WELCOME to true to open on "Who are you?" on every visit */
+const ALWAYS_WELCOME=false;let entered=false;
+let entering=false;
+function enterAs(name){entered=true;
+  if(myName()!==name){claims[me]={name,at:Date.now()};
+    db.doc('claims/'+me).set({name,at:claims[me].at}).catch(e=>{if(e&&e.code==='invalid_argument')blocked()})}
+  renderBanner();render();renderFood();renderCup();setTab('move')}
+function drawWelcome(ready){
+  const mineN=myName(),wp=$('wpick');
+  if(!wp.children.length){
+    wp.innerHTML=PEOPLE.map(p=>`<button data-n="${p.id}"><img src="${p.img}" alt=""><span class="wname">${p.id}</span><small hidden>already here</small></button>`).join('');
+    wp.querySelectorAll('button[data-n]').forEach(b=>b.onclick=()=>{if(b.dataset.go!=='1'||entering)return;entering=true;
+      setTimeout(()=>{entering=false;enterAs(b.dataset.n)},0)});
+  }
+  wp.querySelectorAll('button[data-n]').forEach(b=>{const n=b.dataset.n,by=ready?uidFor(n):null,isMine=!!by&&by===me,other=!!by&&!isMine;
+    const off=!ready||other||(!!mineN&&!isMine);
+    b.dataset.go=off?'0':'1';b.classList.toggle('taken',other);
+    if(off)b.setAttribute('aria-disabled','true');else b.removeAttribute('aria-disabled');
+    b.setAttribute('aria-label',off?n+(other?', already here':''):'I am '+n);
+    b.querySelector('small').hidden=!other});
+  $('wnote').textContent=ready?'':'Getting things ready…';
+}
+function renderBanner(){
+  if(status==='loading'){showMain(false);drawWelcome(false);banner.innerHTML='';return}
+  if(!db||!me){showMain(true);banner.innerHTML=`<div class="banner">Sign in to Claude to join in. You can still look around.</div>`;return}
+  if(!canWrite){showMain(true);banner.innerHTML=`<div class="banner">You can look but not post yet. Ask the person who made this page to share it with you as an <b>Editor</b>.</div>`;return}
+  banner.innerHTML='';
+  if(myName()&&(!ALWAYS_WELCOME||entered)){showMain(true);return}
+  showMain(false);drawWelcome(true);
+}
+
+/* ---------- note under the grid ---------- */
+function closeNote(){note.innerHTML='';sel=null;g.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'))}
+const cellOf=(pid,i)=>g.querySelector(`[data-p="${pid}"][data-i="${i}"]`);
+function openNote(pid,i,focus){
+  const p=PEOPLE.find(x=>x.id===pid),val=entry(pid,i),mine=pid===myName()&&canWrite;sel=pid+i;
+  g.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));const cell=cellOf(pid,i);if(cell)cell.classList.add('sel');
+  const st=`background:${v(p.c[0])};border:0.5px solid ${v(p.c[1])};color:${v(p.c[2])}`;
+  if(mine){
+    note.innerHTML=`<div class="note" style="${st}"><b>You · ${FULL[i]}</b><div class="txt" id="txt" contenteditable="true" role="textbox" aria-label="What did you do on ${FULL[i]}"></div><div class="note-foot"><button class="clear" id="clear">${ICON.x}Clear this day</button></div></div>`;
+    const t=$('txt');t.textContent=val||'';
+    t.oninput=()=>{myDays[dayKey(i)]=t.textContent;dirty=true;const c=cellOf(pid,i);if(c)c.textContent=t.textContent;saveMine()};
+    $('clear').onclick=()=>{delete myDays[dayKey(i)];dirty=true;closeNote();render(false);saveMine()};
+    if(focus)t.focus();
+  }else{
+    note.innerHTML=`<div class="note" style="${st}"><b>${pid} · ${FULL[i]}</b><div class="txt"></div></div>`;
+    note.querySelector('.txt').textContent=val;
+  }
+}
+
+/* ---------- grid ---------- */
+function render(reset=true){
+  if(reset)closeNote();$('wk').textContent=label();
+  const mine=canWrite&&db&&me?myName():null;
+  let h='<div></div>'+PEOPLE.map(p=>`<div class="who"><img src="${p.img}" alt="${p.id}"><i style="background:${v(p.c[1])}"></i></div>`).join('');
+  DAYS.forEach((d,i)=>{h+=`<div class="dy">${d}</div>`;
+    PEOPLE.forEach(p=>{const val=entry(p.id,i);
+      if(val!==null)h+=`<button class="c" data-p="${p.id}" data-i="${i}" style="background:${v(p.c[1])};border-color:${v(p.c[1])};color:${v(p.c[2])}" aria-label="${p.id}, ${FULL[i]}"></button>`;
+      else if(p.id===mine)h+=`<button class="c empty-mine" data-p="${p.id}" data-i="${i}" aria-label="Log your ${FULL[i]}">${ICON.plus}</button>`;
+      else h+=`<div class="c" style="background:${v(p.c[0])};border-color:${v(p.c[0])}"></div>`;
+    })});
+  g.innerHTML=h;
+  g.querySelectorAll('button.c').forEach(b=>{const pid=b.dataset.p,i=+b.dataset.i,val=entry(pid,i);if(val)b.textContent=val;
+    b.addEventListener('click',()=>{
+      if(b.classList.contains('empty-mine')){myDays[dayKey(i)]='';dirty=true;render(false);const nb=cellOf(pid,i);if(nb)nb.classList.add('pop');openNote(pid,i,true);saveMine();return}
+      if(sel===pid+i&&pid!==mine){closeNote();return}
+      if(pid!==mine&&!entry(pid,i)){closeNote();return}
+      openNote(pid,i,false);
+    })});
+  if(sel&&!reset){const s=cellOf(sel.replace(/\d+$/,''),+sel.match(/\d+$/)[0]);if(s)s.classList.add('sel')}
+  updRewards();updMeter();
+}
+
+/* ---------- calendar ---------- */
+function label(){const e=new Date(ws);e.setDate(ws.getDate()+6);return ws.getMonth()===e.getMonth()?`${MON[ws.getMonth()]} ${ws.getDate()} – ${e.getDate()}`:`${MON[ws.getMonth()]} ${ws.getDate()} – ${MON[e.getMonth()]} ${e.getDate()}`}
+function drawCal(){
+  $('wkbtn').setAttribute('aria-expanded',calOpen);
+  if(!calOpen){cw.innerHTML='';return}
+  const y=calM.getFullYear(),m=calM.getMonth(),start=monday(new Date(y,m,1)),we=new Date(ws);we.setDate(ws.getDate()+6);
+  let cells='';for(let k=0;k<42;k++){const d=new Date(start);d.setDate(start.getDate()+k);if(k===35&&d.getMonth()!==m)break;
+    cells+=`<button class="dd${d.getMonth()!==m?' out':''}${d>=ws&&d<=we?' wk':''}${d.getTime()===today.getTime()?' today':''}" data-t="${d.getTime()}">${d.getDate()}</button>`}
+  cw.innerHTML=`<div class="cal" role="dialog" aria-label="Pick a week"><div class="cal-head"><button class="navb" id="cp" aria-label="Previous month">${ICON.left}</button><span>${MONF[m]} ${y}</span><button class="navb" id="cn" aria-label="Next month">${ICON.right}</button></div><div class="cal-row">${['M','T','W','T','F','S','S'].map(x=>`<div class="dn">${x}</div>`).join('')}</div><div class="cal-row">${cells}</div></div>`;
+  $('cp').onclick=e=>{e.stopPropagation();calM=new Date(y,m-1,1);drawCal()};
+  $('cn').onclick=e=>{e.stopPropagation();calM=new Date(y,m+1,1);drawCal()};
+  cw.querySelectorAll('.dd').forEach(b=>b.onclick=e=>{e.stopPropagation();ws=monday(new Date(+b.dataset.t));calOpen=false;drawCal();render()});
+}
+const jigbtn=$('jigbtn'),jigpop=$('jigpop');
+function setJig(on){jigpop.hidden=!on;jigbtn.setAttribute('aria-expanded',String(on))}
+jigbtn.onclick=e=>{e.stopPropagation();const on=jigpop.hidden;if(on&&calOpen){calOpen=false;drawCal()}setJig(on)};
+jigpop.addEventListener('click',e=>e.stopPropagation());
+$('wkbtn').onclick=e=>{e.stopPropagation();setJig(false);calOpen=!calOpen;calM=new Date(ws.getFullYear(),ws.getMonth(),1);drawCal()};
+cw.addEventListener('click',e=>e.stopPropagation());
+document.addEventListener('click',()=>{setJig(false);if(calOpen){calOpen=false;drawCal()}if(dcalOpen){dcalOpen=false;drawDayCal()}if(menuOpen){menuOpen=null;renderFilters()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('sheet2').hidden){closeRecipe();return}if(!sheet.hidden){closeSheet();return}setJig(false);if(calOpen){calOpen=false;drawCal()}if(dcalOpen){dcalOpen=false;drawDayCal()}if(menuOpen){menuOpen=null;renderFilters()}}});
+
+/* ---------- winner winner chicken dinner ---------- */
+const RX=[['❤️','love'],['🤤','drooling'],['🤌','chef’s kiss'],['🔥','fire'],['😋','yum']];
+const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const SEG=/^(?!\.\.?$)[A-Za-z0-9_\-.~:@+]{1,200}$/;
+let posts={},reacts={},comments={},myPosts={},myReacts={},myComments={};
+const busy={posts:0,reacts:0,comments:0};
+let fd=new Date(today),dcalM=new Date(fd.getFullYear(),fd.getMonth(),1),dcalOpen=false,openKey=null,ffilter=null,fday=null,fto=null,pend=null,fmeal=null;
+const MEALS=[['breakfast','Breakfast','🍳'],['lunch','Lunch','🍱'],['dinner','Dinner','🍽️'],['snack','Snacks','🍪']];
+const mealOf=(m)=>MEALS.find(x=>x[0]===m)||null;
+function guessMeal(){const n=new Date(),h=n.getHours()+n.getMinutes()/60;return h<11?'breakfast':h<16?'lunch':h<18.5?'snack':'dinner'}
+function mealChips(sel,allLabel){return (allLabel?`<button class="mchip" data-m="" aria-pressed="${!sel}">${allLabel}</button>`:'')+MEALS.map(([k,l,e])=>`<button class="mchip" data-m="${k}" aria-pressed="${sel===k}">${e} ${l}</button>`).join('')}
+let menuOpen=null;
+const USER_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
+const FORK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2.5 5-2 9h2v9"/></svg>';
+function renderFilters(){
+  const p=PEOPLE.find(q=>q.id===ffilter),mo=mealOf(fmeal);
+  $('plabel').innerHTML=p?`<img class="lav" src="${p.img}" alt="">${p.id}`:`${USER_SVG}Everyone`;
+  $('mlabel').innerHTML=mo?`${mo[2]} ${mo[1]}`:`${FORK_SVG}All meals`;
+  $('pbtn').setAttribute('aria-expanded',String(menuOpen==='people'));$('mbtn').setAttribute('aria-expanded',String(menuOpen==='meals'));
+  const pm=$('pmenu'),mm=$('mmenu');
+  pm.innerHTML=menuOpen==='people'?`<div class="menu" role="menu"><button role="menuitemradio" aria-checked="${!ffilter}" data-n="">${USER_SVG}Everyone</button>`+PEOPLE.map(q=>`<button role="menuitemradio" aria-checked="${ffilter===q.id}" data-n="${q.id}"><img src="${q.img}" alt="">${q.id}</button>`).join('')+`</div>`:'';
+  mm.innerHTML=menuOpen==='meals'?`<div class="menu" role="menu"><button role="menuitemradio" aria-checked="${!fmeal}" data-m="">${FORK_SVG}All meals</button>`+MEALS.map(([k,l,e])=>`<button role="menuitemradio" aria-checked="${fmeal===k}" data-m="${k}"><span class="me">${e}</span>${l}</button>`).join('')+`</div>`:'';
+  pm.querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();ffilter=b.dataset.n||null;menuOpen=null;renderFood()});
+  mm.querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();fmeal=b.dataset.m||null;menuOpen=null;renderFood()});
+  [pm,mm].forEach(w=>{const m=w.firstElementChild;if(m){const r=m.getBoundingClientRect();if(r.right>window.innerWidth-8){m.style.left='auto';m.style.right='0'}}});
+}
+$('pbtn').onclick=e=>{e.stopPropagation();menuOpen=menuOpen==='people'?null:'people';if(dcalOpen){dcalOpen=false;drawDayCal()}renderFilters()};
+$('mbtn').onclick=e=>{e.stopPropagation();menuOpen=menuOpen==='meals'?null:'meals';if(dcalOpen){dcalOpen=false;drawDayCal()}renderFilters()};
+function renderPeopleChips(){const box=$('people');
+  box.innerHTML=`<button class="mchip" data-n="" aria-pressed="${!ffilter}">Everyone</button>`+PEOPLE.map(p=>`<button class="mchip pchip" data-n="${p.id}" aria-pressed="${ffilter===p.id}"><img src="${p.img}" alt="">${p.id}</button>`).join('');
+  box.querySelectorAll('.mchip').forEach(b=>b.onclick=()=>{ffilter=b.dataset.n||null;renderFood()})}
+function renderMealChips(){const box=$('meals');box.innerHTML=mealChips(fmeal,'All meals');box.querySelectorAll('.mchip').forEach(b=>b.onclick=()=>{fmeal=b.dataset.m||null;renderFood()})}
+const photoCache={},photoWait={},qs={};
+const sheet=$('sheet'),dcw=$('dcalwrap');
+const clone=(o)=>JSON.parse(JSON.stringify(o));
+const esc=(s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const fdKey=()=>dkey(fd);
+const splitKey=(k)=>{const i=k.indexOf(':');return [k.slice(0,i),k.slice(i+1)]};
+function nameOf(uid){const c=claims[uid];return c&&uidFor(c.name)===uid?c.name:null}
+function canPost(){return !!(db&&me&&canWrite&&myName())}
+function put(path,body,kind){busy[kind]++;const p=(qs[path]||Promise.resolve()).catch(()=>{}).then(()=>db.doc(path).set(body));qs[path]=p;return p.finally(()=>{busy[kind]--})}
+function writeErr(e,show){
+  let msg="That didn't go through. Try again in a moment.";
+  if(e&&e.code==='invalid_argument'){blocked();msg='You can look but not post yet. Ask the person who made this page to share it with you as an Editor.'}
+  else if(e&&e.code==='quota_exceeded')msg='The photo shelf is full. Let the person who made this page know.';
+  if(show)show(msg);
+}
+function itemsOf(uid){if(uid===me)return myPosts;return (posts[uid]&&posts[uid].items)||{}}
+function postItem(uid,pid){const it=itemsOf(uid);return it[pid]||null}
+function dayPosts(name){const uid=uidFor(name);if(!uid)return [];const it=itemsOf(uid),k=fdKey();
+  return Object.keys(it).filter(pid=>SEG.test(pid)&&it[pid]&&it[pid].date===k).map(pid=>Object.assign({uid,pid},it[pid])).sort((a,b)=>(a.at||0)-(b.at||0))}
+function allUids(src){const s=new Set(Object.keys(src));if(me)s.add(me);return [...s]}
+function rxFor(key){const out={};allUids(reacts).forEach(uid=>{const r=uid===me?myReacts:((reacts[uid]&&reacts[uid].r)||{});const arr=r[key];if(Array.isArray(arr))arr.forEach(e=>{if(RX.some(x=>x[0]===e))(out[e]=out[e]||[]).push(uid)})});return out}
+function cmFor(key){const out=[];allUids(comments).forEach(uid=>{const c=uid===me?myComments:((comments[uid]&&comments[uid].c)||{});for(const [cid,x] of Object.entries(c)){if(x&&x.p===key&&typeof x.t==='string')out.push({uid,cid,t:x.t,at:x.at||0})}});return out.sort((a,b)=>a.at-b.at)}
+function fillImg(img,uid,pid){const k=uid+':'+pid;if(photoCache[k]){img.src=photoCache[k];return}
+  if(!db||!SEG.test(uid)||!SEG.test(pid))return;
+  if(!photoWait[k]){let ref;try{ref=db.doc('photos/'+uid+'/p/'+pid)}catch(_){return}
+    photoWait[k]=ref.get().then(s=>{const d=s.exists?s.data().d:null;if(typeof d==='string'&&d.startsWith('data:image/'))photoCache[k]=d;else delete photoWait[k];return photoCache[k]||null}).catch(()=>{delete photoWait[k];return null})}
+  photoWait[k].then(d=>{if(d&&img.isConnected)img.src=d})}
+function fmtTime(at){if(!at)return '';const d=new Date(at);let h=d.getHours();const m=pad(d.getMinutes()),ap=h<12?'am':'pm';h=h%12||12;return `${h}:${m} ${ap}`}
+const dm=(d)=>`${d.getDate()}/${d.getMonth()+1}`;
+const oneDay=()=>!!fday&&!!fto&&fday.getTime()===fto.getTime();
+function dayLabel(){if(!fday)return 'All days';if(!oneDay())return `${dm(fday)} – ${dm(fto)}`;const diff=Math.round((today-fday)/864e5);return diff===0?`Today · ${dm(fday)}`:diff===1?`Yesterday · ${dm(fday)}`:`${WD[fday.getDay()]} ${dm(fday)}`}
+
+let foodErr='';
+const DATE_RE=/^\d{4}-\d{2}-\d{2}$/;
+const shortDate=(k)=>{const [y,m,d]=k.split('-');return `${+d}/${+m}`};
+function postsOfName(name){const uid=uidFor(name);if(!uid)return [];const it=itemsOf(uid);
+  return Object.keys(it).filter(pid=>SEG.test(pid)&&it[pid]&&typeof it[pid].date==='string'&&DATE_RE.test(it[pid].date)).map(pid=>Object.assign({uid,pid},it[pid]))}
+const postDay=()=>dkey(oneDay()?fday:today);
+
+function renderFood(){
+  $('dlabel').textContent=dayLabel();$('dclear').hidden=!fday;
+  const can=canPost();$('addbite').hidden=!can;
+  const all=[];PEOPLE.forEach(p=>postsOfName(p.id).forEach(x=>all.push(Object.assign({who:p},x))));
+  const k=fday?dkey(fday):null,kt=fto?dkey(fto):k;
+  const shown=all.filter(x=>(!ffilter||x.who.id===ffilter)&&(!k||(x.date>=k&&x.date<=kt))&&(!fmeal||x.meal===fmeal)).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(b.at||0)-(a.at||0));
+  const host=$('bentos');
+  const tiles=shown.map(x=>{const key=x.uid+':'+x.pid,p=x.who,rx=rxFor(key),hearts=(rx['❤️']||[]).length,liked=!!me&&(rx['❤️']||[]).includes(me),cm=cmFor(key).length;
+    return `<div class="tile" style="background:${v(p.c[1])}">`+
+      `<button class="t-open" data-k="${esc(key)}" aria-label="Open ${p.id}'s post from ${shortDate(x.date)}"><img class="ph" data-u="${esc(x.uid)}" data-p="${esc(x.pid)}" alt=""></button>`+
+      `<span class="t-who" style="background:${v(p.c[1])};color:${v(p.c[2])}"><img src="${p.img}" alt=""><span>${p.id}</span></span>`+
+      (()=>{const tag=cm?`💬${cm}`:'';return tag?`<span class="t-date">${tag}</span>`:''})()+
+      `<button class="t-like${liked?' on':''}" data-k="${esc(key)}" ${can?'':'disabled'} aria-pressed="${liked}" aria-label="${liked?'Unlike':'Like'}${hearts?', '+hearts+' likes':''}"><svg class="hrt" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="${liked?'#E8898C':'none'}" stroke="#E8898C" stroke-width="2.4" stroke-linejoin="round"/></svg>${hearts?`<span>${hearts}</span>`:''}</button>`+
+      `</div>`}).join('');
+  host.innerHTML=(foodErr?`<p class="sh-err food-err">${esc(foodErr)}</p>`:'')+(shown.length?`<div class="feed">${tiles}</div>`:`<div class="feed-empty">${(()=>{const ml=fmeal?mealOf(fmeal)[1].toLowerCase():'food';const by=ffilter?` from ${ffilter}`:'';return k?`No ${ml}${by} ${oneDay()?'on this day':'in these dates'}`:`No ${ml}${by} yet`})()}</div>`);
+  renderFilters();
+  host.querySelectorAll('img.ph[data-p]').forEach(img=>fillImg(img,img.dataset.u,img.dataset.p));
+  host.querySelectorAll('.t-open').forEach(b=>b.onclick=()=>{const [u,pid]=splitKey(b.dataset.k);openPost(u,pid)});
+  if(can)host.querySelectorAll('.t-like').forEach(b=>b.onclick=()=>toggleRx(b.dataset.k,'❤️'));
+  refreshSheet();
+}
+$('addbite').onclick=()=>$('fpick').click();
+$('dclear').onclick=()=>{fday=null;fto=null;renderFood()};
+
+function openSheet(html){sheet.innerHTML=html;sheet.hidden=false;document.body.style.overflow='hidden';sheet.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeSheet)}
+function closeSheet(){sheet.hidden=true;sheet.innerHTML='';openKey=null;document.body.style.overflow=''}
+sheet.addEventListener('click',e=>{if(e.target===sheet)closeSheet()});
+
+function openPost(uid,pid,back){
+  const x=postItem(uid,pid);if(!x)return;
+  const name=nameOf(uid)||'Someone',p=PEOPLE.find(q=>q.id===name),mineP=uid===me&&canPost();
+  openKey=uid+':'+pid;
+  openSheet(`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(name)}'s post">
+    ${back?'<button class="linkish backlink" id="backfind">‹ Back to dishes</button>':''}
+    <div class="sh-head">${p?`<img class="av" src="${p.img}" alt="">`:''}<div><b>${esc(name)}</b><small>${mealOf(x.meal)?mealOf(x.meal)[2]+' '+mealOf(x.meal)[1]+' · ':''}${esc(DATE_RE.test(x.date||'')?shortDate(x.date):'')}${x.at?' · '+esc(fmtTime(x.at)):''}</small></div><button class="navb" data-close aria-label="Close">${ICON.x}</button></div>
+    <div class="sh-photo"><img id="shimg" alt="${esc(x.cap||'Food photo')}"></div>
+    <div class="rxrow" id="shrx"></div>
+    <div class="capbox" id="capbox"></div>
+    ${mineP?'<div class="mpick" id="shmeal" role="group" aria-label="Which meal"></div>':''}
+    <div class="recbox" id="recbox"></div>
+    <div class="cmhead" id="cmhead">Comments</div>
+    <div class="cms" id="shcm"></div>
+    ${canPost()?`<form class="cmform" id="cmform"><input class="field" id="cmin" maxlength="300" placeholder="Add a comment…" autocomplete="off" aria-label="Add a comment"><button class="btn" type="submit">Send</button></form><p class="sh-err" id="cmerr" hidden></p>`:''}
+    ${mineP?`<div class="sh-actions"><button class="linkish" id="delpost">Delete this post</button></div>`:''}
+  </div>`);
+  const capbox=$('capbox');
+  const drawCap=(editing)=>{
+    const cur=(postItem(uid,pid)||{}).cap||'';capbox.innerHTML='';
+    if(editing&&mineP){
+      const ta=document.createElement('textarea');ta.className='field';ta.rows=2;ta.maxLength=300;ta.value=cur;ta.placeholder="what's on the plate?";ta.setAttribute('aria-label','Caption');
+      const row=document.createElement('div');row.className='cap-actions';
+      const cancel=document.createElement('button');cancel.className='btn ghost';cancel.textContent='Cancel';cancel.onclick=()=>drawCap(false);
+      const save=document.createElement('button');save.className='btn';save.textContent='Save';
+      save.onclick=()=>{const it=myPosts[pid];if(!it)return;it.cap=ta.value.trim();drawCap(false);renderFood();
+        put('posts/'+me,{items:clone(myPosts)},'posts').catch(er=>writeErr(er,showErr))};
+      row.append(cancel,save);capbox.append(ta,row);ta.focus();return;
+    }
+    if(cur){const pEl=document.createElement('p');pEl.className='sh-cap';const b=document.createElement('b');b.textContent=name+' ';pEl.append(b,document.createTextNode(cur));capbox.append(pEl)}
+    if(mineP){const eb=document.createElement('button');eb.className='linkish';eb.textContent=cur?'Edit caption':'Add a caption';eb.onclick=()=>drawCap(true);capbox.append(eb)}
+    capbox.hidden=!cur&&!mineP;
+  };
+  drawCap(false);
+  mountRecipe($('recbox'),uid,pid,mineP);
+  const bf=$('backfind');if(bf)bf.onclick=()=>openFinder();
+  fillImg($('shimg'),uid,pid);
+  const sm=$('shmeal');
+  if(sm){const draw=()=>{const cur=(postItem(uid,pid)||{}).meal||null;sm.innerHTML=mealChips(cur);
+    sm.querySelectorAll('.mchip').forEach(b=>b.onclick=()=>{const it=myPosts[pid];if(!it)return;
+      if(it.meal===b.dataset.m)delete it.meal;else it.meal=b.dataset.m;draw();renderFood();
+      put('posts/'+me,{items:clone(myPosts)},'posts').catch(er=>writeErr(er,showErr))})};draw()}
+  refreshSheet();
+  const f=$('cmform');
+  if(f){const inp=$('cmin'),er=$('cmerr');inp.oninput=()=>{er.hidden=true};
+    f.onsubmit=e=>{e.preventDefault();const t=inp.value.trim();if(!t){er.textContent='Write something first.';er.hidden=false;return}addComment(openKey,t);inp.value=''}}
+  const d=$('delpost');
+  if(d){let armed=false;d.onclick=()=>{if(!armed){armed=true;d.textContent='Tap again to delete';setTimeout(()=>{if(d.isConnected){armed=false;d.textContent='Delete this post'}},3000);return}deletePost(pid)}}
+}
+function refreshSheet(){
+  if(!openKey||sheet.hidden||!$('shrx'))return;
+  const [uid,pid]=splitKey(openKey);if(!postItem(uid,pid)){closeSheet();return}
+  const rx=rxFor(openKey),can=canPost();
+  $('shrx').innerHTML=RX.map(([e,l])=>{const who=rx[e]||[],on=!!me&&who.includes(me),names=who.map(u=>nameOf(u)||'Someone').join(', ');
+    return `<button class="rxb${on?' on':''}" data-e="${e}" ${can?'':'disabled'} aria-pressed="${on}" aria-label="${l}${who.length?', '+who.length:''}" title="${esc(names)}"><span class="e">${e}</span>${who.length?`<span>${who.length}</span>`:''}</button>`}).join('');
+  if(can)$('shrx').querySelectorAll('.rxb').forEach(b=>b.onclick=()=>toggleRx(openKey,b.dataset.e));
+  const box=$('shcm');box.innerHTML='';
+  const list=cmFor(openKey),ch=$('cmhead');if(ch)ch.hidden=!list.length&&!can;
+  list.forEach(c=>{const row=document.createElement('div');row.className='cm';
+    const b=document.createElement('b');b.textContent=nameOf(c.uid)||'Someone';
+    const s=document.createElement('span');s.textContent=c.t;row.append(b,s);
+    if(c.uid===me&&can){const x=document.createElement('button');x.className='del';x.setAttribute('aria-label','Delete comment');x.textContent='×';x.onclick=()=>delComment(c.cid);row.append(x)}
+    box.append(row)});
+}
+const showErr=(m)=>{const el=$('cmerr');if(el&&!sheet.hidden){el.textContent=m;el.hidden=false}else{foodErr=m;renderFood()}};
+function toggleRx(key,e){foodErr='';const arr=(myReacts[key]||[]).slice(),i=arr.indexOf(e);if(i>=0)arr.splice(i,1);else arr.push(e);
+  if(arr.length)myReacts[key]=arr;else delete myReacts[key];renderFood();
+  put('reacts/'+me,{r:clone(myReacts)},'reacts').catch(er=>writeErr(er,showErr))}
+function addComment(key,t){foodErr='';myComments[newId()]={p:key,t,at:Date.now()};renderFood();
+  put('comments/'+me,{c:clone(myComments)},'comments').catch(er=>writeErr(er,showErr))}
+function delComment(cid){foodErr='';delete myComments[cid];renderFood();put('comments/'+me,{c:clone(myComments)},'comments').catch(er=>writeErr(er,showErr))}
+function deletePost(pid){foodErr='';delete myPosts[pid];closeSheet();renderFood();
+  put('posts/'+me,{items:clone(myPosts)},'posts').then(()=>{delete photoCache[me+':'+pid];delete photoWait[me+':'+pid];return Promise.all([db.doc('photos/'+me+'/p/'+pid).delete(),db.doc('recipes/'+me+'/r/'+pid).delete()])}).catch(er=>writeErr(er,showErr))}
+
+/* ---------- recipes and "what can I make?" ---------- */
+let sampler=null,pantryText='',lastFind=null;
+const recipeCache={},recipeWait={};
+const parseIng=(s)=>String(s||'').split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean).slice(0,30).map(x=>x.slice(0,40));
+const ingOf=(x)=>Array.isArray(x&&x.ing)?x.ing.filter(i=>typeof i==='string').slice(0,30):[];
+function getSteps(uid,pid){const k=uid+':'+pid;if(k in recipeCache)return Promise.resolve(recipeCache[k]);
+  if(!db||!SEG.test(uid)||!SEG.test(pid))return Promise.resolve('');
+  if(!recipeWait[k])recipeWait[k]=db.doc('recipes/'+uid+'/r/'+pid).get().then(s=>{const t=s.exists&&typeof s.data().steps==='string'?s.data().steps:'';recipeCache[k]=t;return t}).catch(()=>{delete recipeWait[k];return ''});
+  return recipeWait[k]}
+function dishName(x){if(x.cap)return x.cap.length>70?x.cap.slice(0,68)+'…':x.cap;const mo=mealOf(x.meal);return `${x.who?x.who.id:'A friend'}'s ${mo?mo[1].toLowerCase():'dish'}`}
+
+function mountRecipe(box,uid,pid,mineP,start){
+  const inRec=!!start;
+  const draw=async(mode)=>{
+    const x=postItem(uid,pid)||{},ing=ingOf(x),has=ing.length||x.hr;box.innerHTML='';
+    if(mode==='edit'&&mineP){
+      const steps=x.hr?await getSteps(uid,pid):'';if(!box.isConnected)return;box.innerHTML='';
+      const l1=document.createElement('label');l1.className='flabel';l1.textContent='Ingredients';
+      const t1=document.createElement('textarea');t1.className='field';t1.rows=2;t1.maxLength=1200;t1.placeholder='eggs, tomato, garlic, butter';t1.value=ing.join(', ');t1.setAttribute('aria-label','Ingredients');
+      const l2=document.createElement('label');l2.className='flabel';l2.textContent='How you made it';
+      const t2=document.createElement('textarea');t2.className='field';t2.rows=4;t2.maxLength=4000;t2.placeholder='1. Boil the eggs for 7 minutes…';t2.value=steps;t2.setAttribute('aria-label','Recipe steps');
+      const row=document.createElement('div');row.className='cap-actions';
+      const cancel=document.createElement('button');cancel.className='btn ghost';cancel.textContent='Cancel';cancel.onclick=()=>draw(has?'open':'closed');
+      const save=document.createElement('button');save.className='btn';save.textContent='Save recipe';
+      save.onclick=async()=>{const it=myPosts[pid];if(!it)return;const ni=parseIng(t1.value),ns=t2.value.trim().slice(0,4000);
+        if(ni.length)it.ing=ni;else delete it.ing;if(ns)it.hr=true;else delete it.hr;recipeCache[uid+':'+pid]=ns;
+        save.setAttribute('aria-busy','true');save.textContent='Saving…';
+        try{if(ns)await put('recipes/'+me+'/r/'+pid,{steps:ns},'posts');else if(x.hr)await db.doc('recipes/'+me+'/r/'+pid).delete();
+          await put('posts/'+me,{items:clone(myPosts)},'posts');renderFood();draw(ni.length||ns?'open':'closed')}
+        catch(er){save.removeAttribute('aria-busy');save.textContent='Save recipe';writeErr(er,showErr)}};
+      row.append(cancel,save);box.append(l1,t1,l2,t2,row);t1.focus();return;
+    }
+    if(mode==='open'&&has){
+      const h=document.createElement('div');h.className='rec-h';h.textContent='Ingredients';box.append(h);
+      if(ing.length){const ul=document.createElement('div');ul.className='ingl';ing.forEach(i=>{const s=document.createElement('span');s.className='ing';s.textContent=i;ul.append(s)});box.append(ul)}
+      else{const n=document.createElement('p');n.className='rec-p';n.textContent='No ingredients listed.';box.append(n)}
+      if(x.hr){const h2=document.createElement('div');h2.className='rec-h';h2.textContent='How to make it';const p2=document.createElement('p');p2.className='rec-p';p2.textContent='Loading…';box.append(h2,p2);
+        getSteps(uid,pid).then(t=>{if(p2.isConnected)p2.textContent=t||'No steps written yet.'})}
+      const row=document.createElement('div');row.className='rec-actions';
+      if(mineP){const ed=document.createElement('button');ed.className='linkish';ed.textContent='Edit recipe';ed.onclick=()=>draw('edit');row.append(ed)}
+      box.append(row);return;
+    }
+    if(inRec){closeRecipe();return}
+    if(has){const b=document.createElement('button');b.className='btn recbtn';b.textContent='🍳 Get recipe';b.onclick=()=>openRecipe(uid,pid,'open');box.append(b)}
+    else if(mineP){const b=document.createElement('button');b.className='linkish';b.textContent='Add ingredients & recipe';b.onclick=()=>openRecipe(uid,pid,'edit');box.append(b)}
+    box.hidden=!has&&!mineP;
+  };
+  draw(start||'closed');
+}
+const sheet2=$('sheet2');let recCtx=null;
+function closeRecipe(){sheet2.hidden=true;sheet2.innerHTML='';
+  const c=recCtx;recCtx=null;
+  if(c&&!sheet.hidden&&$('recbox'))mountRecipe($('recbox'),c.uid,c.pid,c.mineP);
+  if(sheet.hidden)document.body.style.overflow=''}
+sheet2.addEventListener('click',e=>{if(e.target===sheet2)closeRecipe()});
+function openRecipe(uid,pid,mode){
+  const x=postItem(uid,pid);if(!x)return;
+  const name=nameOf(uid)||'Someone',p=PEOPLE.find(q=>q.id===name),mineP=uid===me&&canPost();
+  recCtx={uid,pid,mineP};
+  document.body.style.overflow='hidden';sheet2.hidden=false;
+  sheet2.innerHTML=(`<div class="sheet" role="dialog" aria-modal="true" aria-label="Recipe">
+    <button class="linkish backlink" id="backpost">‹ Back to post</button>
+    <div class="sh-head"><span class="rthumb"><img id="rimg" alt=""></span><div><b>${esc(dishName(Object.assign({},x,{who:p||null})))}</b><small>by ${esc(name)}</small></div><button class="navb" data-close aria-label="Close">${ICON.x}</button></div>
+    <div class="recbox" id="recfull"></div>
+  </div>`);
+  sheet2.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeRecipe);
+  $('backpost').onclick=closeRecipe;
+  fillImg($('rimg'),uid,pid);
+  mountRecipe($('recfull'),uid,pid,mineP,mode);
+}
+
+const STAPLES=new Set(['salt','pepper','black pepper','oil','water','sugar','cooking oil','olive oil']);
+const normIng=(s)=>String(s).toLowerCase().replace(/\(.*?\)/g,'').replace(/[^a-z\s]/g,' ').replace(/\b(fresh|chopped|sliced|diced|minced|large|small|cup|cups|tbsp|tsp|g|kg|ml|of|a|some)\b/g,' ').replace(/\s+/g,' ').trim().replace(/(oes|es|s)$/,m=>m==='oes'?'o':'');
+function localRank(have,cands){
+  const H=have.map(normIng).filter(Boolean);
+  return cands.map(c=>{const need=ingOf(c).map(n=>({raw:n,k:normIng(n)})).filter(n=>n.k&&!STAPLES.has(n.k));
+    if(!need.length)return null;
+    const hit=need.filter(n=>H.some(h=>h===n.k||h.includes(n.k)||n.k.includes(h)));
+    const miss=need.filter(n=>!hit.includes(n));
+    return {c,score:Math.round(100*hit.length/need.length),have:hit.map(n=>n.raw),swaps:[],missing:miss.map(n=>n.raw),tip:''}})
+    .filter(r=>r&&r.score>0).sort((a,b)=>b.score-a.score).slice(0,6);
+}
+function finderCands(){const out=[];PEOPLE.forEach(p=>postsOfName(p.id).forEach(x=>{if(ingOf(x).length)out.push(Object.assign({who:p},x))}));return out}
+function openFinder(){
+  openKey=null;
+  openSheet(`<div class="sheet" role="dialog" aria-modal="true" aria-label="What can I make?">
+    <div class="sh-head"><div><b>What can I make?</b><small>from dishes your friends have posted</small></div><button class="navb" data-close aria-label="Close">${ICON.x}</button></div>
+    <label class="flabel" for="pantry">What's in your kitchen?</label>
+    <textarea class="field" id="pantry" rows="2" maxlength="600" placeholder="eggs, tomatoes, garlic, butter"></textarea>
+    <p class="sh-err" id="perr" hidden></p>
+    <div class="sh-actions"><button class="btn" id="pfind">Find dishes</button></div>
+    <div id="presults" class="fresults"></div>
+  </div>`);
+  const ta=$('pantry');ta.value=pantryText;ta.oninput=()=>{pantryText=ta.value;$('perr').hidden=true};
+  $('pfind').onclick=findDishes;
+  if(lastFind)paintFind(lastFind);
+}
+async function findDishes(){
+  const er=$('perr'),out=$('presults'),btn=$('pfind');if(!out)return;
+  const have=parseIng(pantryText);
+  if(!have.length){er.textContent='Add at least one ingredient first.';er.hidden=false;return}
+  const cands=finderCands();
+  if(!cands.length){lastFind=null;out.innerHTML=`<div class="feed-empty">No one has added ingredients to a post yet. Open one of your posts and tap "Add ingredients & recipe" to start.</div>`;return}
+  btn.setAttribute('aria-busy','true');btn.textContent='Finding…';out.innerHTML=`<div class="sh-wait">Looking through your friends' dishes…</div>`;
+  let ranked=null,by='match';
+  if(sampler){
+    const lines=cands.slice(0,80).map(c=>JSON.stringify({id:c.uid+':'+c.pid,dish:dishName(c),ingredients:ingOf(c)})).join('\n');
+    const prompt=`A friend wants to cook something tonight. They have: ${have.join(', ')}.\n`+
+      `Below are dishes their friends posted, one JSON object per line, with each dish's ingredients.\n${lines}\n\n`+
+      `Pick up to 6 dishes they could make most closely with what they have. Treat salt, pepper, oil, water and sugar as always available. `+
+      `Suggest sensible swaps for missing ingredients using what they have (e.g. ghee for butter). Leave out dishes that would need several key ingredients they don't have. `+
+      `Reply with only a JSON array, best match first, like: [{"id":"<id from the list>","score":85,"have":["eggs"],"swaps":[{"missing":"ghee","use":"butter"}],"missing":["onion"],"tip":"one short friendly line"}]`;
+    try{
+      const res=await sampler.json(prompt,{modelTier:'quick'});
+      if(Array.isArray(res)){const byId=new Map(cands.map(c=>[c.uid+':'+c.pid,c]));
+        ranked=res.filter(r=>r&&byId.has(String(r.id))).slice(0,6).map(r=>({c:byId.get(String(r.id)),score:Math.max(0,Math.min(100,Math.round(Number(r.score)||0))),
+          have:(Array.isArray(r.have)?r.have:[]).map(String).slice(0,12),
+          swaps:(Array.isArray(r.swaps)?r.swaps:[]).filter(s=>s&&s.missing&&s.use).map(s=>({missing:String(s.missing).slice(0,40),use:String(s.use).slice(0,40)})).slice(0,6),
+          missing:(Array.isArray(r.missing)?r.missing:[]).map(String).slice(0,12),tip:String(r.tip||'').slice(0,160)}));by='claude'}
+    }catch(e){if(e&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e.code))sampler=null}
+  }
+  if(!ranked){ranked=localRank(have,cands);by='match'}
+  lastFind={ranked,by};
+  if(!$('presults'))return;
+  btn.removeAttribute('aria-busy');btn.textContent='Find dishes';paintFind(lastFind);
+}
+function paintFind(f){
+  const out=$('presults');if(!out)return;
+  if(!f.ranked.length){out.innerHTML=`<div class="feed-empty">Nothing close yet. Try adding a few more ingredients.</div>`;return}
+  out.innerHTML=`<p class="fnote">${f.by==='claude'?'Picked by Claude, with swaps from your kitchen':'Matched by ingredients'}</p>`+f.ranked.map(r=>{const c=r.c,mo=mealOf(c.meal);
+    return `<button class="fres" data-k="${esc(c.uid+':'+c.pid)}"><span class="fth" style="background:${v(c.who.c[1])}"><img data-u="${esc(c.uid)}" data-p="${esc(c.pid)}" alt=""></span>`+
+      `<span class="fmain"><b>${esc(dishName(c))}</b><small>by ${c.who.id}${mo?' · '+mo[2]+' '+mo[1]:''}</small>`+
+      `<span class="fbar"><i style="width:${r.score}%"></i></span>`+
+      (r.have.length?`<span class="fline"><em>Have</em> ${esc(r.have.join(', '))}</span>`:'')+
+      (r.swaps.length?`<span class="fline"><em>Swap</em> ${esc(r.swaps.map(s=>s.missing+' → '+s.use).join(', '))}</span>`:'')+
+      (r.missing.length?`<span class="fline"><em>Need</em> ${esc(r.missing.join(', '))}</span>`:'')+
+      (r.tip?`<span class="ftip">${esc(r.tip)}</span>`:'')+`</span></button>`}).join('');
+  out.querySelectorAll('img[data-p]').forEach(img=>fillImg(img,img.dataset.u,img.dataset.p));
+  out.querySelectorAll('.fres').forEach(b=>b.onclick=()=>{const [u,p]=splitKey(b.dataset.k);openPost(u,p,true)});
+}
+const cookBtn=$('cookbtn');if(cookBtn)cookBtn.onclick=e=>{e.stopPropagation();openFinder()};
+
+async function shrink(file){
+  const url=URL.createObjectURL(file);
+  try{
+    const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url});
+    let max=900,q=0.72,out='';
+    for(let t=0;t<6;t++){
+      const s=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(img.naturalWidth*s));c.height=Math.max(1,Math.round(img.naturalHeight*s));
+      const ctx=c.getContext('2d');ctx.fillStyle='#FFFAF3';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);
+      out=c.toDataURL('image/jpeg',q);if(out.length<170000)break;
+      max=Math.round(max*0.82);q=Math.max(0.5,q-0.06);
+    }
+    return out;
+  }finally{URL.revokeObjectURL(url)}
+}
+$('fpick').addEventListener('change',async e=>{
+  const picked=[...(e.target.files||[])];e.target.value='';if(!picked.length||!canPost())return;
+  const files=picked.slice(0,10),capped=picked.length>10;
+  openSheet(`<div class="sheet"><div class="sh-wait" id="bwait">Getting your photo${files.length>1?'s':''} ready…</div></div>`);
+  const items=[];let bad=0;
+  for(let i=0;i<files.length;i++){
+    const w=$('bwait');if(w&&files.length>1)w.textContent=`Getting your photos ready… ${i+1}/${files.length}`;
+    let d=null;try{d=await shrink(files[i])}catch(_){d=null}
+    if(d)items.push({data:d,cap:'',meal:guessMeal()});else bad++;
+  }
+  if(!items.length){openSheet(`<div class="sheet"><div class="sh-wait">Those photos didn't open. Try different ones.</div><div class="sh-actions"><button class="btn ghost" data-close>Close</button></div></div>`);return}
+  const date=postDay();
+  let note=[capped?'Only the first 10 photos were added.':'',bad?`${bad} photo${bad>1?'s':''} didn't open.`:''].filter(Boolean).join(' ');
+  const draw=()=>{
+    const n=items.length;
+    openSheet(`<div class="sheet" role="dialog" aria-modal="true" aria-label="New posts">
+      <div class="sh-head"><div><b>New post${n>1?'s':''}</b><small>${n} photo${n>1?'s':''} · ${esc(shortDate(date))}</small></div><button class="navb" data-close aria-label="Close">${ICON.x}</button></div>
+      ${note?`<p class="sh-err">${esc(note)}</p>`:''}
+      <div class="batch">${items.map((it,i)=>`<div class="bitem">
+        <div class="bthumb"><img src="${it.data}" alt="Photo ${i+1}">${n>1?`<button class="bx" data-x="${i}" aria-label="Remove photo ${i+1}">×</button>`:''}</div>
+        <div class="bfields"><div class="mpick" data-mi="${i}" role="group" aria-label="Which meal for photo ${i+1}"></div>
+        <textarea class="field" data-ci="${i}" rows="2" maxlength="300" placeholder="Caption" aria-label="Caption for photo ${i+1}"></textarea>
+        <button class="linkish rtoggle" data-ri="${i}">${it.showRec?'Hide recipe':'+ Add ingredients & recipe'}</button>
+        ${it.showRec?`<textarea class="field" data-ii="${i}" rows="2" maxlength="1200" placeholder="Ingredients: eggs, tomato, garlic…" aria-label="Ingredients for photo ${i+1}"></textarea><textarea class="field" data-si="${i}" rows="3" maxlength="4000" placeholder="How you made it (optional)" aria-label="Recipe for photo ${i+1}"></textarea>`:''}</div>
+      </div>`).join('')}</div>
+      <p class="sh-err" id="cerr" hidden></p>
+      <div class="sh-actions"><button class="btn ghost" data-close>Cancel</button><button class="btn" id="postbtn">${n>1?`Post all ${n}`:'Post it'}</button></div>
+    </div>`);
+    sheet.querySelectorAll('textarea[data-ci]').forEach(t=>{const it=items[+t.dataset.ci];t.value=it.cap;t.oninput=()=>{it.cap=t.value}});
+    sheet.querySelectorAll('textarea[data-ii]').forEach(t=>{const it=items[+t.dataset.ii];t.value=it.ing||'';t.oninput=()=>{it.ing=t.value}});
+    sheet.querySelectorAll('textarea[data-si]').forEach(t=>{const it=items[+t.dataset.si];t.value=it.rec||'';t.oninput=()=>{it.rec=t.value}});
+    sheet.querySelectorAll('.rtoggle').forEach(b=>b.onclick=()=>{const it=items[+b.dataset.ri];it.showRec=!it.showRec;draw()});
+    sheet.querySelectorAll('.mpick[data-mi]').forEach(box=>{const it=items[+box.dataset.mi];
+      const paint=()=>{box.innerHTML=mealChips(it.meal);box.querySelectorAll('.mchip').forEach(b=>b.onclick=()=>{it.meal=b.dataset.m;paint()})};paint()});
+    sheet.querySelectorAll('.bx').forEach(b=>b.onclick=()=>{items.splice(+b.dataset.x,1);note='';draw()});
+    const pb=$('postbtn');
+    pb.onclick=async()=>{
+      if(pb.getAttribute('aria-busy')==='true')return;pb.setAttribute('aria-busy','true');
+      const total=items.length;let done=0;
+      try{
+        for(const it of items){
+          if(it.pid){done++;continue}
+          pb.textContent=total>1?`Posting ${done+1}/${total}…`:'Posting…';
+          const pid=newId();
+          await put('photos/'+me+'/p/'+pid,{d:it.data},'posts');photoCache[me+':'+pid]=it.data;
+          const ing=parseIng(it.ing),steps=String(it.rec||'').trim().slice(0,4000);
+          if(steps){await put('recipes/'+me+'/r/'+pid,{steps},'posts');recipeCache[me+':'+pid]=steps}
+          myPosts[pid]=Object.assign({date,cap:(it.cap||'').trim(),at:Date.now(),meal:it.meal},ing.length?{ing}:{},steps?{hr:true}:{});it.pid=pid;done++;
+        }
+        await put('posts/'+me,{items:clone(myPosts)},'posts');
+        closeSheet();renderFood();
+      }catch(er){
+        const saved=items.filter(it=>it.pid);
+        if(saved.length){try{await put('posts/'+me,{items:clone(myPosts)},'posts');for(let i=items.length-1;i>=0;i--)if(items[i].pid)items.splice(i,1)}catch(_){saved.forEach(it=>{delete myPosts[it.pid];delete it.pid})}}
+        renderFood();
+        if(!items.length){closeSheet();return}
+        writeErr(er,m=>{note=(saved.length&&items.length?`Posted ${saved.length}. `:'')+m+(items.length?' Tap Post to try the rest.':'')});
+        draw();
+      }
+    };
+  };
+  draw();
+});
+
+function drawDayCal(){
+  $('dbtn').setAttribute('aria-expanded',String(dcalOpen));
+  if(!dcalOpen){dcw.innerHTML='';return}
+  const y=dcalM.getFullYear(),m=dcalM.getMonth(),start=monday(new Date(y,m,1));
+  const has=new Set();PEOPLE.forEach(p=>postsOfName(p.id).forEach(x=>has.add(x.date)));
+  let cells='';for(let k=0;k<42;k++){const d=new Date(start);d.setDate(start.getDate()+k);if(k===35&&d.getMonth()!==m)break;const fut=d>today;
+    const t=d.getTime(),end=pend?t===pend.getTime():(fday&&(t===fday.getTime()||t===fto.getTime())),mid=!pend&&fday&&t>fday.getTime()&&t<fto.getTime();
+    cells+=`<button class="dd${d.getMonth()!==m||fut?' out':''}${end?' wk':''}${mid?' rng':''}${t===today.getTime()?' today':''}${has.has(dkey(d))?' has':''}" data-t="${d.getTime()}"${fut?' aria-disabled="true"':''}>${d.getDate()}</button>`}
+  dcw.innerHTML=`<div class="cal dcal" role="dialog" aria-label="Pick a day"><div class="cal-head"><button class="navb" id="dcp" aria-label="Previous month">${ICON.left}</button><span>${MONF[m]} ${y}</span><button class="navb" id="dcn" aria-label="Next month">${ICON.right}</button></div><div class="cal-row">${['M','T','W','T','F','S','S'].map(x=>`<div class="dn">${x}</div>`).join('')}</div><div class="cal-row">${cells}</div><div class="cal-foot">${pend?`<span class="cal-hint">Now tap an end date</span><button class="linkish" id="done1">Just this day</button>`:`<span class="cal-hint">Tap a start date, then an end date</span><button class="linkish" id="dall">Show all days</button>`}</div></div>`;
+  $('dcp').onclick=e=>{e.stopPropagation();dcalM=new Date(y,m-1,1);drawDayCal()};
+  $('dcn').onclick=e=>{e.stopPropagation();dcalM=new Date(y,m+1,1);drawDayCal()};
+  const da=$('dall');if(da)da.onclick=e=>{e.stopPropagation();fday=null;fto=null;pend=null;dcalOpen=false;drawDayCal();renderFood()};
+  const d1=$('done1');if(d1)d1.onclick=e=>{e.stopPropagation();fday=pend;fto=pend;pend=null;dcalOpen=false;drawDayCal();renderFood()};
+  dcw.querySelectorAll('.dd').forEach(b=>b.onclick=e=>{e.stopPropagation();if(b.getAttribute('aria-disabled')==='true')return;
+    const d=new Date(+b.dataset.t);
+    if(!pend){pend=d;drawDayCal();return}
+    const a=pend.getTime()<=d.getTime()?pend:d,z=pend.getTime()<=d.getTime()?d:pend;
+    fday=a;fto=z;pend=null;dcalOpen=false;drawDayCal();renderFood()});
+}
+dcw.addEventListener('click',e=>e.stopPropagation());
+$('dbtn').onclick=e=>{e.stopPropagation();if(menuOpen){menuOpen=null;renderFilters()}dcalOpen=!dcalOpen;pend=null;const b=fto||today;dcalM=new Date(b.getFullYear(),b.getMonth(),1);drawDayCal()};
+
+/* ---------- fill your cup ---------- */
+let cups={},myCups={},ideas={},myIdeas={};busy.cups=0;busy.ideas=0;
+let cday=new Date(today),cweek=monday(today),cnote=null;
+function cupText(name,dk){const uid=uidFor(name);if(!uid)return null;
+  const src=uid===me?myCups:((cups[uid]&&cups[uid].days)||{});const t=src[dk];return typeof t==='string'?t:null}
+function cupSvg(tea,filled){
+  return `<svg class="cupsvg" viewBox="0 0 64 56" aria-hidden="true">`+
+    `<path d="M12 18h36v12a18 18 0 0 1-36 0z" fill="#FFFAF3" stroke="#8E3F46" stroke-width="3"/>`+
+    (filled?`<path d="M14.5 21h31v9a15.5 15.5 0 0 1-31 0z" style="fill:${tea}"/>`:'')+
+    `<path d="M48 21h3a6 6 0 0 1 0 12h-4" fill="none" stroke="#8E3F46" stroke-width="3"/>`+
+    `<ellipse cx="30" cy="50.5" rx="22" ry="3" fill="#FBF0E2" stroke="#8E3F46" stroke-width="2.6"/></svg>`}
+function weekLabel(w){const e=new Date(w);e.setDate(w.getDate()+6);return w.getMonth()===e.getMonth()?`${MON[w.getMonth()]} ${w.getDate()} – ${e.getDate()}`:`${MON[w.getMonth()]} ${w.getDate()} – ${MON[e.getMonth()]} ${e.getDate()}`}
+function cupLabel(){const diff=Math.round((today-cday)/864e5),d=dm(cday);return diff===0?`Today · ${d}`:diff===1?`Yesterday · ${d}`:`${WD[cday.getDay()]} · ${d}`}
+function allIdeas(){const out=[];allUids(ideas).forEach(uid=>{const src=uid===me?myIdeas:((ideas[uid]&&ideas[uid].items)||{});
+  for(const [id,x] of Object.entries(src)){if(x&&typeof x.t==='string'&&x.t.trim())out.push({uid,id,t:x.t.slice(0,120),at:x.at||0})}});return out.sort((a,b)=>a.at-b.at)}
+
+function renderCup(){
+  const can=canPost(),mine=myName();
+  $('cwlabel').textContent=weekLabel(cweek);
+  $('cwnext').setAttribute('aria-disabled',String(cweek.getTime()>=monday(today).getTime()));
+  let h='<div></div>'+PEOPLE.map(p=>`<div class="who"><img src="${p.img}" alt="${p.id}"><i style="background:${v(p.c[1])}"></i></div>`).join('');
+  for(let i=0;i<7;i++){const d=new Date(cweek);d.setDate(cweek.getDate()+i);const k=dkey(d),fut=d>today,isT=d.getTime()===today.getTime();
+    h+=`<div class="dy${isT?' tdy':''}">${DAYS[i]}</div>`;
+    PEOPLE.forEach(p=>{const t=cupText(p.id,k),full=t!==null,isMe=p.id===mine&&can,svg=cupSvg(v(p.c[1]),full);
+      if(isMe&&!fut)h+=`<button class="cc mine${full?' full':''}" data-n="${p.id}" data-k="${k}" data-i="${i}" aria-label="${full?'Your cup on '+FULL[i]+': '+esc(t):'Fill your cup for '+FULL[i]}">${svg}</button>`;
+      else if(full)h+=`<button class="cc full" data-n="${p.id}" data-k="${k}" data-i="${i}" aria-label="${p.id}'s cup on ${FULL[i]}">${svg}</button>`;
+      else h+=`<div class="cc${fut?' fut':''}">${svg}</div>`})}
+  $('cgrid').innerHTML=h;
+  $('cgrid').querySelectorAll('button.cc').forEach(b=>b.onclick=()=>{const n=b.dataset.n,k=b.dataset.k,i=+b.dataset.i;
+    if(n===mine&&can){cnote=null;paintNote();const [y,m,d]=k.split('-').map(Number);cday=new Date(y,m-1,d);openCupSheet();return}
+    const key=n+'|'+k;cnote=cnote&&cnote.key===key?null:{key,n,k,i};paintNote()});
+  paintNote();
+  if($('idl'))paintIdeas();
+}
+function paintNote(){const box=$('cnote');if(!cnote){box.innerHTML='';return}
+  const t=cupText(cnote.n,cnote.k);if(t===null){cnote=null;box.innerHTML='';return}
+  const p=PEOPLE.find(q=>q.id===cnote.n);
+  box.innerHTML=`<div class="note" style="background:${v(p.c[0])};border:0.5px solid ${v(p.c[1])};color:${v(p.c[2])}"><b>${p.id} · ${FULL[cnote.i]}</b><div class="txt"></div></div>`;
+  box.querySelector('.txt').textContent=t}
+
+function openCupSheet(){
+  if(!canPost())return;const dk=dkey(cday),cur=cupText(myName(),dk);
+  openKey=null;
+  openSheet(`<div class="sheet" role="dialog" aria-modal="true" aria-label="Fill your cup">
+    <div class="sh-head"><div><b>What filled your cup?</b><small>${esc(cupLabel())}</small></div><button class="navb" data-close aria-label="Close">${ICON.x}</button></div>
+    <textarea class="field" id="cupin" rows="3" maxlength="300" placeholder="a slow coffee, a walk, a call with a friend…" aria-label="What filled your cup"></textarea>
+    <button class="linkish ideatoggle" id="ideatoggle">Need an idea?</button>
+    <div class="ingl" id="cupideas" hidden></div>
+    <p class="sh-err" id="cuperr" hidden></p>
+    <div class="sh-actions">${cur!==null?'<button class="linkish" id="cupclear">Empty my cup</button>':''}<button class="btn ghost" data-close>Cancel</button><button class="btn" id="cupsave">Fill my cup</button></div>
+  </div>`);
+  const ta=$('cupin'),er=$('cuperr'),box=$('cupideas');ta.value=cur||'';ta.oninput=()=>{er.hidden=true};
+  $('ideatoggle').onclick=()=>{const ids=allIdeas();
+    box.innerHTML=ids.length?ids.map((x,i)=>`<button class="ing ideapick" data-i="${i}">${esc(x.t)}</button>`).join(''):'<span class="rec-p">No ideas yet.</span>';
+    box.querySelectorAll('.ideapick').forEach(b=>b.onclick=()=>{ta.value=ids[+b.dataset.i].t;er.hidden=true;ta.focus()});
+    box.hidden=!box.hidden};
+  const save=(val)=>{if(val===null)delete myCups[dk];else myCups[dk]=val;closeSheet();renderCup();
+    if(val!==null){const c=$('cgrid').querySelector(`button.cc.mine[data-k="${dk}"]`);if(c)c.classList.add('pop')}
+    put('cups/'+me,{days:clone(myCups)},'cups').catch(e=>writeErr(e))};
+  $('cupsave').onclick=()=>{const t=ta.value.trim();if(!t){er.textContent='Write what filled your cup first.';er.hidden=false;return}save(t)};
+  const cl=$('cupclear');if(cl)cl.onclick=()=>save(null);
+  if(cur===null)ta.focus();
+}
+
+function openIdeas(){
+  const can=canPost();openKey=null;
+  openSheet(`<div class="sheet" role="dialog" aria-modal="true" aria-label="Cup ideas">
+    <div class="sh-head"><div><b>Cup ideas</b></div><button class="navb" data-close aria-label="Close">${ICON.x}</button></div>
+    <ul class="idl" id="idl"></ul>
+    ${can?`<form class="cmform" id="ideaform"><input class="field" id="ideain" maxlength="120" placeholder="Add your idea…" autocomplete="off" aria-label="Add your idea"><button class="btn" type="submit">Add</button></form><p class="sh-err" id="ideaerr" hidden></p>`:''}
+  </div>`);
+  paintIdeas();
+  const f=$('ideaform');
+  if(f){const inp=$('ideain'),er=$('ideaerr');inp.oninput=()=>{er.hidden=true};
+    f.onsubmit=e=>{e.preventDefault();const t=inp.value.trim();if(!t){er.textContent='Write an idea first.';er.hidden=false;return}
+      myIdeas[newId()]={t:t.slice(0,120),at:Date.now()};inp.value='';paintIdeas();
+      put('ideas/'+me,{items:clone(myIdeas)},'ideas').catch(x=>writeErr(x,m=>{er.textContent=m;er.hidden=false}))}}
+}
+function paintIdeas(){const ul=$('idl');if(!ul)return;const can=canPost(),list=allIdeas();
+  ul.innerHTML=list.length?list.map(x=>`<li><span>${esc(x.t)}</span>${x.uid===me&&can?`<button data-id="${esc(x.id)}" aria-label="Remove this idea">×</button>`:''}</li>`).join(''):'<li class="empty">No ideas yet. Add the first one.</li>';
+  ul.querySelectorAll('button[data-id]').forEach(b=>b.onclick=()=>{delete myIdeas[b.dataset.id];paintIdeas();
+    put('ideas/'+me,{items:clone(myIdeas)},'ideas').catch(x=>writeErr(x,m=>{const er=$('ideaerr');if(er){er.textContent=m;er.hidden=false}}))})}
+
+$('ideabtn').onclick=e=>{e.stopPropagation();openIdeas()};
+$('cwprev').onclick=()=>{cweek=new Date(cweek.getFullYear(),cweek.getMonth(),cweek.getDate()-7);cnote=null;renderCup()};
+$('cwnext').onclick=()=>{if(cweek.getTime()>=monday(today).getTime())return;cweek=new Date(cweek.getFullYear(),cweek.getMonth(),cweek.getDate()+7);cnote=null;renderCup()};
+
+function setTab(t){
+  $('pane-move').hidden=t!=='move';$('pane-food').hidden=t!=='food';$('pane-cup').hidden=t!=='cup';
+  $('t-move').setAttribute('aria-selected',String(t==='move'));$('t-food').setAttribute('aria-selected',String(t==='food'));$('t-cup').setAttribute('aria-selected',String(t==='cup'));
+  setJig(false);if(calOpen){calOpen=false;drawCal()}if(dcalOpen){dcalOpen=false;drawDayCal()}
+  try{localStorage.setItem('shimmy-tab',t)}catch(_){}
+  if(t==='food')renderFood();
+  if(t==='cup')renderCup();
+}
+$('t-move').onclick=()=>setTab('move');
+$('t-food').onclick=()=>setTab('food');
+$('t-cup').onclick=()=>setTab('cup');
+let savedTab='move';try{savedTab=localStorage.getItem('shimmy-tab')||'move'}catch(_){}
+
+render();renderBanner();renderFood();renderCup();setTab(['food','cup'].includes(savedTab)?savedTab:'move');
+
+/* ---------- connect to the shared store ---------- */
+(async()=>{
+  const cl=window.claude;
+  const [dbNs,userNs,smNs]=cl&&cl.use?await Promise.all([cl.use('db'),cl.use('user'),cl.use('sample')]):[null,null,null];
+  sampler=smNs;
+  db=dbNs;me=userNs?await userNs.id():null;
+  if(userNs&&me){const w=await userNs.can('data.write');if(w===false)canWrite=false}
+  status='ready';
+  if(!db){render(false);renderBanner();return}
+  db.collection('claims').onSnapshot(s=>{const c={};s.docs.forEach(d=>{c[d.id]=d.data()});if(me&&claims[me]&&!c[me])c[me]=claims[me];claims=c;render(false);renderBanner();renderFood();renderCup()},()=>{});
+  db.collection('cups').onSnapshot(s=>{const o={};s.docs.forEach(d=>{o[d.id]=d.data()});cups=o;if(me&&!busy.cups)myCups=clone((o[me]&&o[me].days)||{});renderCup()},()=>{});
+  db.collection('ideas').onSnapshot(s=>{const o={};s.docs.forEach(d=>{o[d.id]=d.data()});ideas=o;if(me&&!busy.ideas)myIdeas=clone((o[me]&&o[me].items)||{});renderCup()},()=>{});
+  db.collection('posts').onSnapshot(s=>{const o={};s.docs.forEach(d=>{o[d.id]=d.data()});posts=o;if(me&&!busy.posts)myPosts=clone((o[me]&&o[me].items)||{});renderFood()},()=>{});
+  db.collection('reacts').onSnapshot(s=>{const o={};s.docs.forEach(d=>{o[d.id]=d.data()});reacts=o;if(me&&!busy.reacts)myReacts=clone((o[me]&&o[me].r)||{});renderFood()},()=>{});
+  db.collection('comments').onSnapshot(s=>{const o={};s.docs.forEach(d=>{o[d.id]=d.data()});comments=o;if(me&&!busy.comments)myComments=clone((o[me]&&o[me].c)||{});renderFood()},()=>{});
+  db.collection('logs').onSnapshot(s=>{const l={};s.docs.forEach(d=>{l[d.id]=d.data()});logs=l;
+    if(me&&!dirty){myDays=JSON.parse(JSON.stringify((l[me]&&l[me].days)||{}))}
+    const t=$('txt');const typing=t&&document.activeElement===t;
+    render(false);if(sel&&!typing){const m=sel.match(/^(.*?)(\d+)$/);if(m&&entry(m[1],+m[2])!==null)openNote(m[1],+m[2],false);else closeNote()}
+  },()=>{});
+  db.collection('rewards').onSnapshot(s=>{s.docs.forEach(d=>{const r=d.data().r;if(Array.isArray(r))rewards[d.id]=r});updRewards()},()=>{});
+  renderBanner();
+})();
+</script>
